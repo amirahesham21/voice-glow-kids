@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Voice Glow Kids Academy</title>
+<style>
+:root{--cream:#fff1e8;--navy:#14294f;--pink:#e94d78;--soft:#f5a0b4;--gold:#f5c65b;--white:#fffaf6;--purple:#9870c9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--navy);font-family:Arial,sans-serif;overflow-wrap:anywhere}
+.card,.panel,.feed-item{min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:break-word}
+.card p,.panel p,.feed-item p{max-width:100%;overflow-wrap:anywhere;white-space:normal}
+input,select,textarea{min-width:0;max-width:100%}
+.email-preview{white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.55;max-width:100%}
+header{background:var(--white);padding:15px;border-bottom:4px solid var(--gold);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.logo{font-size:25px;font-weight:900}.logo span{color:var(--pink)}
+nav{display:flex;flex-wrap:wrap;gap:8px}
+button{background:var(--pink);color:white;border:0;padding:12px 17px;border-radius:28px;font-size:15px;font-weight:bold;cursor:pointer}
+button.secondary{background:var(--navy)}button.gold{background:var(--gold);color:var(--navy)}button:hover{filter:brightness(.94)}
+.floaties{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}.floaties span{position:absolute;bottom:-50px;animation:floatUp linear infinite;opacity:.55;font-size:22px}@keyframes floatUp{to{transform:translateY(-115vh) rotate(25deg);opacity:0}}
+.emoji-tray{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}.emoji-tray button{background:#fff0f6;color:#a23b69;padding:8px 11px;font-size:20px}.feed-item{background:#fff7fb;border:1px solid #f4c7d8;border-radius:16px;padding:12px;margin:10px 0}.feed-actions{display:flex;gap:7px;flex-wrap:wrap}.feed-actions button{padding:7px 11px;font-size:13px}.feed-meta{font-size:12px;color:#7d6a79}
+main{max-width:1100px;margin:auto;padding:20px}section{margin:20px 0}
+h1{font-size:clamp(38px,7vw,65px);margin:10px 0}h1 span{color:var(--pink)}h2{color:var(--navy)}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;align-items:center;padding:25px 0}
+.hero-art{min-height:270px;border-radius:30px;background:linear-gradient(140deg,#f5a0b4,#fffaf6);display:grid;place-items:center;font-size:95px}
+.hero p{font-size:19px;line-height:1.6}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:var(--white);border:2px solid #f2d8c8;border-radius:24px;padding:20px;box-shadow:0 6px 16px #14294f12}
+.card h3{color:var(--pink)}.emoji{font-size:43px}
+.panel{background:var(--navy);color:white;border-radius:25px;padding:22px}.panel h2{color:var(--gold)}
+input,select,textarea{width:100%;padding:13px;margin:7px 0;border:1px solid #dfc8bb;border-radius:12px;background:white;font-size:16px}
+textarea{min-height:100px}.row{display:flex;gap:8px;align-items:center}.row input{flex:1;min-width:0}
+.hidden{display:none!important}#clock{font-weight:bold;color:var(--purple)}#notice{min-height:25px;color:var(--pink)}
+footer{text-align:center;background:var(--navy);color:white;padding:28px;margin-top:30px}footer p{color:#ffe1e9}
+.certificate{background:white;color:var(--navy);border:7px double var(--purple);border-radius:22px;padding:25px;text-align:center}
+.certificate .name{color:#914d8c;font-family:cursive;font-size:27px}
+.certificate .seal{border:3px solid var(--gold);border-radius:50%;width:85px;height:85px;margin:15px auto;display:grid;place-items:center}
+.heart{color:var(--pink)}
+#languageToggle{white-space:nowrap}.curriculum-lesson{background:#fff7fb;border:1px solid #f2c8d8;border-radius:18px;padding:16px;white-space:pre-wrap;line-height:1.65}.lock-note{background:#fff4d7;border-radius:14px;padding:12px}.floating-dobby{position:fixed;right:14px;bottom:14px;z-index:20;background:#fffaf6;border:2px solid #f5a0b4;border-radius:50%;width:66px;height:66px;display:grid;place-items:center;font-size:38px;box-shadow:0 5px 18px #14294f22;cursor:pointer}.tiny-note{font-size:12px;color:#786b78}
+@media(max-width:520px){header{justify-content:center}nav{justify-content:center}nav button{font-size:13px;padding:10px}}
+
+.dobby-message{background:#fff1e8;border:1px solid #f5c6d2;border-radius:15px;padding:13px;color:#14294f;font-weight:700;line-height:1.55}
+.dobby-actions{display:flex;flex-wrap:wrap;gap:9px}
+.dobby-actions button{flex:1 1 145px}
+
+
+/* Keep English question numbering and punctuation in the correct order */
+.reporter-card ol{direction:ltr;text-align:left;list-style-position:outside;padding-left:1.6em;padding-right:0;margin-left:0;margin-right:0}
+.reporter-card ol li{direction:ltr;text-align:left;unicode-bidi:normal;margin:10px 0;line-height:1.6}
+/* Dobby's happy achievement celebration */
+.dobby-celebration{position:fixed;inset:0;z-index:99999;pointer-events:none;overflow:hidden}
+.dobby-celebration .confetti{position:absolute;top:-24px;font-size:clamp(20px,4vw,32px);animation:dobby-fall 1.8s ease-in forwards}
+@keyframes dobby-fall{0%{transform:translateY(-10vh) rotate(0deg);opacity:1}100%{transform:translateY(115vh) rotate(620deg);opacity:0}}
+.dobby-toast{position:fixed;left:50%;top:18%;transform:translate(-50%,-10px) scale(.9);z-index:100000;background:#fff;border:3px solid #ef9abc;border-radius:22px;padding:14px 22px;color:#7540a7;font-weight:900;font-size:clamp(17px,4vw,24px);text-align:center;box-shadow:0 8px 28px #7540a733;opacity:0;pointer-events:none;transition:.25s}
+.dobby-toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
+.dobby-bounce{animation:dobby-bounce .55s ease}
+@keyframes dobby-bounce{0%,100%{transform:translateY(0) scale(1)}35%{transform:translateY(-12px) scale(1.12)}70%{transform:translateY(2px) scale(.98)}}
+
+
+html[dir="rtl"] body,body.arabic-mode{font-family:Tahoma,Arial,sans-serif;text-align:right}
+html[dir="rtl"] nav,html[dir="rtl"] .row{direction:rtl}
+html[dir="rtl"] input,html[dir="rtl"] textarea,html[dir="rtl"] select{direction:rtl;text-align:right}
+html[dir="rtl"] .hero,html[dir="rtl"] .cards,html[dir="rtl"] .reporter-grid{direction:rtl}
+html[dir="rtl"] .floating-dobby{right:auto;left:14px}
+html[dir="rtl"] .reporter-signoff{text-align:center}
+
+.teaser-hero{max-width:1000px;margin:30px auto 20px}.teaser-note{text-align:center;max-width:760px;margin:18px auto 35px;padding:28px}.teaser-note .emoji{font-size:2rem}.public-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}.public-nav button{white-space:nowrap}@media(max-width:600px){.public-nav{justify-content:center}.teaser-hero{padding:18px}.teaser-note{margin:14px 8px 28px}}
+
+/* Little Star public welcome, free corner, birds and music */
+.little-star{max-width:1000px;margin:22px auto;padding:24px;background:linear-gradient(135deg,#fff0f7,#f3edff 55%,#eaf8ff);border:2px solid #edc8e7;border-radius:30px;box-shadow:0 12px 28px #a67ab51c;text-align:center;position:relative;overflow:hidden}.little-star h2{color:#9252a7;font-size:clamp(25px,4vw,36px)}.star-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px;margin-top:18px;text-align:center}.star-tile{background:#ffffffd9;border:1px solid #ead5f2;border-radius:20px;padding:17px;box-shadow:0 5px 14px #8659a515}.star-tile .big{font-size:42px;display:block;margin-bottom:7px}.star-tile p{color:#665575;line-height:1.5}.music-dock{position:fixed;left:12px;bottom:12px;z-index:1000;background:#fff;border:2px solid #e8c5eb;border-radius:22px;padding:8px 12px;box-shadow:0 6px 20px #44244b22;display:flex;gap:8px;align-items:center;max-width:calc(100vw - 24px)}.music-dock button{padding:8px 12px;font-size:13px}.music-dock span{font-size:13px;color:#7540a7;font-weight:800}.welcome-screen{position:fixed;inset:0;z-index:200000;background:linear-gradient(135deg,#ffeaf4,#f1eaff 55%,#e5f7ff);display:grid;place-items:center;padding:20px;overflow:hidden}.welcome-card{position:relative;z-index:2;max-width:560px;width:100%;padding:30px 22px;text-align:center;background:#ffffffed;border:3px solid #efc8e8;border-radius:32px;box-shadow:0 15px 50px #62407530}.welcome-card .welcome-mascot{font-size:76px;animation:mascotBob 2.4s ease-in-out infinite}.welcome-card h1{font-size:clamp(30px,7vw,48px);color:#9252a7}.welcome-card p{font-size:18px;line-height:1.6;color:#665575}.welcome-birds{position:absolute;inset:0;pointer-events:none}.welcome-birds span{position:absolute;font-size:clamp(24px,5vw,42px);animation:birdFloat 7s ease-in-out infinite}.welcome-birds span:nth-child(1){left:8%;top:18%}.welcome-birds span:nth-child(2){right:10%;top:22%;animation-delay:-2s}.welcome-birds span:nth-child(3){left:15%;bottom:18%;animation-delay:-4s}.welcome-birds span:nth-child(4){right:14%;bottom:15%;animation-delay:-1s}.welcome-birds span:nth-child(5){left:48%;top:7%;animation-delay:-3s}@keyframes birdFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-22px) rotate(7deg)}}@keyframes mascotBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}@media(max-width:520px){.music-dock{left:8px;bottom:8px}.music-dock span{display:none}.little-star{padding:17px 12px}}
+</style>
+
+<style id="reporterStyles">
+.reporter-section{padding:28px 18px;margin:26px auto;max-width:1120px;background:#fff2ec;border:2px solid #f4c8d8;border-radius:28px;color:#172c52}
+.reporter-heading{text-align:center;margin-bottom:18px}
+.reporter-kicker{color:#8b45b8;font-weight:800;letter-spacing:.08em}
+.reporter-heading h2{font-size:clamp(2rem,5vw,3.2rem);color:#172c52;margin:8px 0}
+.reporter-heading p{color:#e64b83;font-weight:700;font-size:1.15rem}
+.reporter-hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(220px,.75fr);gap:18px;align-items:center;background:#fff;border:2px solid #edc6dc;border-radius:24px;padding:14px;margin-bottom:18px}
+.reporter-hero img{width:100%;height:auto;display:block;border-radius:18px}
+.reporter-hero h3{color:#7840a6;font-size:1.5rem}
+.reporter-section button{background:#e94c82;color:#fff;border:0;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer;margin:5px}
+.reporter-section button:disabled{opacity:.5;cursor:not-allowed}
+.reporter-section button.secondary{background:#7540a7}
+.reporter-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:14px 0}
+.reporter-card{background:#fff;border:2px solid #e8c6e9;border-radius:20px;padding:18px;min-width:0}
+.reporter-card h3{color:#7540a7;margin-top:0}
+.reporter-card li,.reporter-card label{line-height:1.55;margin:8px 0}
+.reporter-card label{display:block}
+.reporter-card input[type=checkbox]{width:auto;accent-color:#e94c82}
+.reporter-section select,.reporter-section textarea{display:block;width:100%;box-sizing:border-box;margin:10px 0;padding:12px;border:1px solid #e4c9d8;border-radius:12px;background:#fff;color:#172c52;font:inherit}
+.reporter-section audio{width:100%;margin:10px 0}
+.reporter-signoff{text-align:center;color:#7540a7;font-weight:800;font-size:1.1rem;margin-top:18px}
+@media(max-width:760px){.reporter-hero{grid-template-columns:1fr}.reporter-grid{grid-template-columns:1fr}.reporter-section{padding:18px 12px}}
+</style>
+
+</head>
+<body>
+<div class="welcome-screen" id="welcomeScreen" role="dialog" aria-modal="true" aria-label="Welcome to Voice Glow Kids"><div class="welcome-birds" aria-hidden="true"><span>🕊️</span><span>💗</span><span>🐦</span><span>💕</span><span>🕊️</span></div><div class="welcome-card"><div class="welcome-mascot">🧸</div><h1>Welcome, Little Star! 🌈</h1><p>Voice Glow Kids is happy to see you. Let’s learn, play and shine together!</p><button type="button" class="gold" onclick="enterAcademy()">Enter My Happy World 💗</button><p style="font-size:12px;margin-bottom:0">Tap to enter and start the academy music 🎵</p></div></div>
+<audio id="academyMusic" src="Amiraaaa.mp3" preload="auto" loop></audio><div class="music-dock"><span>🎵 Voice Glow Music</span><button type="button" id="musicToggle" onclick="toggleAcademyMusic()">Play Music</button><button type="button" class="secondary" onclick="toggleMusicVolume()" id="musicVolume">🔊</button></div>
+<button class="floating-dobby" type="button" onclick="greetDobby()" aria-label="Dobby says hello">🧸</button>
+<header>
+ <div class="logo">🎙 Voice Glow <span>Kids</span></div><div id="clock"></div>
+ <nav class="public-nav">
+  <button class="gold" id="languageToggle" type="button" onclick="toggleLanguage()">العربية</button>
+  <button onclick="show('account')" data-en="Member Login" data-ar="دخول المشتركين">Member Login</button>
+  <button class="secondary" onclick="show('join')" data-en="Join Course" data-ar="الانضمام للكورس">Join Course</button>
+  <button class="member-only hidden" onclick="show('curriculum')" data-en="My Curriculum 🔒" data-ar="منهجي 🔒">My Curriculum 🔒</button>
+  <button class="member-only hidden" onclick="show('parentDashboard')" data-en="Parent Dashboard" data-ar="متابعة الماما">Parent Dashboard</button>
+  <button class="child-only hidden" id="reporterNavButton" onclick="show('youngSchoolReporter')" data-en="🎙 My Lessons" data-ar="🎙 دروسي">🎙 My Lessons</button>
+  <button class="gold" onclick="show('admin')" data-en="🔐 Admin Login" data-ar="🔐 دخول الأدمن">🔐 Admin Login</button>
+ </nav>
+</header>
+<main>
+<div id="home">
+ <section class="hero teaser-hero">
+  <div class="hero-art">🎧🎤🌸<div style="font-size:20px">🧸 ⭐ ✨</div></div>
+  <div><h1>Voice Glow <span>Kids</span></h1>
+   <h2 data-en="A Little Voice… A Big Dream! 🎤" data-ar="صوت صغير… وحلم كبير! 🎤">A Little Voice… A Big Dream! 🎤</h2>
+   <p data-en="A magical journey of creativity, confidence and fun is waiting for our little stars." data-ar="رحلة مميزة من الإبداع والثقة والمرح في انتظار نجومنا الصغيرين.">A magical journey of creativity, confidence and fun is waiting for our little stars.</p>
+   <p data-en="Are You Ready to Shine? ⭐" data-ar="مستعدين تتألقوا؟ ⭐">Are You Ready to Shine? ⭐</p>
+   <button onclick="show('account')" data-en="🔐 Member Login" data-ar="🔐 دخول المشتركين">🔐 Member Login</button>
+   <button class="secondary" onclick="show('join')" data-en="Join Our Course 💗" data-ar="اشتركوا معانا 💗">Join Our Course 💗</button>
+   <button class="gold" onclick="show('admin')" data-en="🔐 Admin Login" data-ar="🔐 دخول الأدمن">🔐 Admin Login</button>
+  </div>
+ </section>
+ <section class="card teaser-note">
+  <div class="emoji">✨ 🧸 🎙️ ✨</div>
+  <h2 data-en="Your special world is waiting!" data-ar="عالمكم الخاص مستنيكم!">Your special world is waiting!</h2>
+  <p data-en="The lessons, journal and activities are reserved for enrolled members. Sign in with your parent account to continue." data-ar="الدروس والجرنال والأنشطة للمشتركين فقط. سجّلوا الدخول بحساب ولي الأمر للمتابعة.">The lessons, journal and activities are reserved for enrolled members. Sign in with your parent account to continue.</p>
+ </section>
+ <section class="little-star" id="littleStarCorner"><div style="font-size:34px">🕊️ 💗 ✨ 🧸 ✨ 💗 🕊️</div><h2 data-en="🌈 My Little Star Corner" data-ar="🌈 ركن نجمنا الصغير">🌈 My Little Star Corner</h2><p data-en="A happy little place for every child — free to explore, smile and shine!" data-ar="ركن صغير سعيد لكل طفل — مجاني للتجربة والابتسام والتألق!">A happy little place for every child — free to explore, smile and shine!</p><div class="star-tiles"><article class="star-tile"><span class="big">🎤</span><h3>My First Hello</h3><p>Say hello with your bright, happy voice.</p><button type="button" onclick="freeHello()">Try It!</button></article><article class="star-tile"><span class="big">⭐</span><h3>Daily Star</h3><p id="freeStarMessage">You are learning something new every day. Keep shining!</p><button type="button" class="gold" onclick="newFreeStar()">Get Encouragement</button></article><article class="star-tile"><span class="big">👏</span><h3>Clap for Me</h3><p>Celebrate every little try. You deserve a cheer!</p><button type="button" onclick="freeCelebrate()">Celebrate!</button></article><article class="star-tile"><span class="big">💌</span><h3>Kind Words</h3><p>You are creative, brave and wonderfully you.</p><button type="button" class="secondary" onclick="freeKindWords()">Read My Message</button></article></div><p id="freeCornerStatus" aria-live="polite" style="font-weight:800;color:#9252a7;margin-top:16px"></p><p style="font-size:13px;color:#806c8b">Free activities are open to everyone. The full curriculum and private journal remain for enrolled members.</p></section>
+</div>
+<section id="studio" class="hidden"><h2 data-en="🎙 My Voice Studio" data-ar="🎙 استوديو صوتي">🎙 My Voice Studio</h2><div class="panel"><p id="practiceLine">Hello! My name is ... and I love using my voice!</p><button onclick="startRecording()">Start Recording</button><button class="gold" onclick="stopRecording()">Stop</button><audio id="playback" controls style="width:100%;margin-top:15px"></audio><p id="recordStatus"></p></div></section>
+<section id="acting" class="hidden"><h2 data-en="🎭 Voice Acting Corner" data-ar="🎭 ركن التمثيل الصوتي">🎭 Voice Acting Corner</h2><div class="cards">
+ <article class="card"><div class="emoji">🦁</div><h3>Brave Lion</h3><p>I am brave, strong and ready to roar!</p><button onclick="chooseLine('I am brave, strong and ready to roar!')">Practice</button></article>
+ <article class="card"><div class="emoji">🧚</div><h3>Happy Fairy</h3><p>Hello, my friends! Let's make today magical!</p><button onclick="chooseLine('Hello, my friends! Let’s make today magical!')">Practice</button></article>
+ <article class="card"><div class="emoji">🚀</div><h3>Space Explorer</h3><p>Three, two, one! Let's explore the universe!</p><button onclick="chooseLine('Three, two, one! Let’s explore the universe!')">Practice</button></article>
+</div></section>
+<section id="parents" class="hidden"><h2 data-en="💗 Mommy's Encouragement Corner" data-ar="💗 ركن تشجيع الماميز">💗 Mommy's Encouragement Corner</h2><div class="card"><p>I'm so proud of you, my little star!</p><p>Your voice is beautiful. Keep shining!</p><p>Every time you practice, you become more confident.</p><p>You are brave, creative and special!</p></div>
+ <div class="card" id="momDailyCard"><h3>🌷 Mommy's Daily Hug</h3><p id="momDailyMessage" aria-live="polite"></p><button type="button" class="gold" onclick="nextMomMessage()">Show Another Message 💗</button></div>
+ <div class="card"><h3>Send a Message to Your Child</h3><textarea id="momMessage" placeholder="Write your lovely message..."></textarea><button onclick="sendMomMessage()">Send Message</button><p id="momStatus"></p></div>
+</section>
+<section id="parentDashboard" class="hidden"><h2 data-en="💗 Parent Dashboard" data-ar="💗 لوحة متابعة الماما">💗 Parent Dashboard</h2><div class="card"><p data-en="Sign in with the verified parent account used at enrollment to see only your own child’s course dates and journal." data-ar="سجّلي الدخول بحساب ولي الأمر المؤكد المستخدم في التسجيل لمتابعة مواعيد وجورنال طفلك فقط.">Sign in with the verified parent account used at enrollment to see only your own child’s course dates and journal.</p><button type="button" onclick="loadParentDashboard()">Refresh My Child’s Progress</button><div id="parentDashboardContent" aria-live="polite"></div></div></section>
+<section id="courseInfo" class="hidden"><h2 data-en="📚 Course Information" data-ar="📚 معلومات الكورس">📚 Course Information</h2><div class="cards"><article class="card"><h3>Schedule</h3><p>Sunday &amp; Tuesday</p></article><article class="card"><h3>Time</h3><p>7:00 PM – 8:00 PM</p></article><article class="card"><h3>Duration</h3><p>One month</p></article><article class="card"><h3>Monthly Fee</h3><p>800 EGP — paid in advance</p></article></div></section>
+<section id="join" class="hidden"><h2 data-en="🌸 Join Voice Glow Kids" data-ar="🌸 اشتركي في فويس جلو كيدز">🌸 Join Voice Glow Kids</h2><div class="card">
+ <input id="parentName" placeholder="Parent's full name"><input id="childName" placeholder="Child's full name"><input id="childAge" type="number" min="4" placeholder="Child's age"><input id="contactPhone" type="tel" placeholder="Parent's phone number"><input id="contactEmail" type="email" placeholder="Parent's email">
+ <select id="training"><option value="Voice Over">Voice Over Training</option><option value="Other">Other Training</option></select><textarea id="joinNotes" placeholder="Anything we should know?"></textarea>
+ <div class="panel" style="margin:16px 0"><h2>Monthly Program Fee: 800 EGP</h2><p>Duration: One month • Full payment in advance</p><h3>Payment via Vodafone Cash</h3><p style="font-size:22px;font-weight:bold">01098080575</p><p>After payment, please send your payment confirmation via WhatsApp. Your enrollment will be confirmed after payment verification.</p><a href="https://wa.me/201201965488" target="_blank" rel="noopener"><button type="button" class="gold">Send Payment Confirmation on WhatsApp</button></a></div>
+ <a href="https://forms.gle/pKrSP8mQBKxxWg1B7" target="_blank" rel="noopener"><button type="button">Open Registration Form</button></a>
+ <button type="button" id="submitJoinButton" onclick="submitJoin()">Submit Website Registration</button><p id="joinStatus" role="status" aria-live="polite"></p><p class="feed-meta">Please create a parent account and verify your email under <a href="#account" onclick="show('account');return false;">My Account</a>, then return here to submit registration.</p>
+ <p><strong>Important:</strong> Completing the form does not confirm enrollment. Confirmation is sent after payment verification.</p>
+</div></section>
+<section id="account" class="hidden"><h2 data-en="🔐 My Account" data-ar="🔐 حسابي">🔐 My Account</h2><div class="card">
+ <input id="email" type="email" placeholder="Email address"><div class="row"><input id="password" type="password" placeholder="Password"><button class="secondary" onclick="togglePassword()">👁</button></div>
+ <button onclick="signUp()">Create Account</button><button onclick="signIn()">Sign In</button><button class="gold" onclick="resendVerification()">Resend Verification Email</button><button class="secondary" onclick="signOutUser()">Sign Out</button><p id="message"></p><p id="userInfo"></p>
+</div></section>
+<section id="curriculum" class="hidden"><h2 data-en="🔒 Little Voice Stars — Private Curriculum" data-ar="🔒 منهج ليتل فويس ستارز الخاص">🔒 Little Voice Stars — Private Curriculum</h2>
+ <div class="card"><p data-en="This learning space is private. Sign in with the parent's verified account, then enter the unique password assigned to your child by the academy." data-ar="هذه المساحة خاصة. سجّلي الدخول بحساب ولي الأمر المؤكد، ثم أدخلي كلمة المرور الخاصة بطفلك التي خصصتها الأكاديمية له.">This learning space is private. Sign in with the parent's verified account, then enter the unique password assigned to your child by the academy.</p>
+ <p data-en="First sign in with the verified parent account, then enter the child code issued by the academy." data-ar="سجّلي الدخول أولًا بحساب ولي الأمر المؤكد، ثم أدخلي كود الطفل الصادر من الأكاديمية.">First sign in with the verified parent account, then enter the child code issued by the academy.</p>
+ <input id="curriculumChildName" placeholder="Child's full name"><input id="curriculumChildPassword" type="password" autocomplete="one-time-code" placeholder="6-digit child code"><button onclick="unlockChildCurriculum()">🔑 Unlock My Curriculum</button><p id="curriculumStatus"></p></div>
+ <div id="curriculumContent" class="hidden"><div class="panel"><h2>🌈 Welcome, Little Star!</h2><p id="curriculumWelcome">Your special learning journey starts here.</p></div><div id="curriculumLessons" class="cards"></div></div>
+</section>
+<section id="certificate" class="hidden"><h2 data-en="🎓 My Fun Achievement Card" data-ar="🎓 بطاقة إنجازي المرحة">🎓 My Fun Achievement Card</h2><p>This is a fun encouragement feature only, not an official or accredited certificate.</p><div class="certificate" id="certificatePaper">
+ <h2>🌸 VOICE GLOW KIDS 🌸</h2><h2>Certificate of Achievement</h2><p>This certificate is proudly presented to</p>
+ <input id="certificateName" placeholder="Child's name" style="max-width:350px;text-align:center"><div class="name" id="certificateDisplay">Little Star</div>
+ <p>For completing the Voice Glow Kids journey with creativity, confidence, joyful expression and a shining voice. 🎙️✨</p><div class="seal">🌟<br>VOICE GLOW KIDS</div><p>Date: <span id="certificateDate"></span></p><p><i>Amira Hesham — Coach</i></p><p>Keep shining, Little Voice! 🌈</p>
+</div><button onclick="updateCertificate()">Update Name</button><button class="secondary" onclick="window.print()">Print / Save PDF</button></section>
+
+<section id="policies" class="hidden"><h2 data-en="Important Program Notice" data-ar="تنويه مهم عن البرنامج">Important Program Notice</h2><div class="card"><h3>Certificate Disclaimer</h3><p>Voice Glow Kids Academy does not provide accredited, officially recognized, or government-issued certificates.</p><p>Our program focuses on practical learning, skill development, creativity, and building children's confidence through interactive activities. Any participation or reward certificates, if offered, are for appreciation and encouragement only and do not represent official qualifications or accredited certification.</p><p>Participation in the program does not guarantee professional qualifications or employment.</p></div><div class="card"><h3>Copyright &amp; Intellectual Property</h3><p>© 2026 Voice Glow Kids Academy. All Rights Reserved.</p><p>All website content, training materials, activities, lesson plans, designs, characters, videos, audio recordings, and educational resources are the intellectual property of Voice Glow Kids Academy.</p><p>No part of this content may be copied, reproduced, modified, distributed, published, or used commercially without prior written permission. Unauthorized use or redistribution of academy materials is prohibited.</p><p><strong>Created and Managed by Amira Hesham — Coach</strong></p></div></section>
+<section id="admin" class="hidden">
+ <h2 data-en="🔐 Admin Dashboard" data-ar="🔐 لوحة تحكم الأدمن">🔐 Admin Dashboard</h2>
+ <div class="card" id="adminLoginPanel">
+  <p>Admin-only sign in. Use the dedicated administrator email and password. Parent accounts and child codes cannot open this dashboard.</p>
+  <input id="adminEmail" type="email" placeholder="Admin email address">
+  <input id="adminPassword" type="password" placeholder="Admin password">
+  <button onclick="adminSignIn()">Admin Sign In</button>
+  <p id="adminStatus"></p>
+ </div>
+ <div class="hidden" id="adminDashboard">
+  <div class="row" style="justify-content:space-between;flex-wrap:wrap">
+   <h3>Registration Requests</h3>
+   <button class="secondary" onclick="loadAdminData()">Refresh</button>
+  </div>
+  <div id="adminRegistrations"><p>No data loaded yet.</p></div>
+  <h3>📝 Children Journals</h3><div id="adminJournals"><p>No journals loaded yet.</p></div>
+  <h3>Parent Messages</h3>
+  <div id="adminMessages"><p>No data loaded yet.</p></div>
+  <h3>📚 Curriculum Publisher</h3>
+  <p>Only publish lessons after you have finalized the material.</p>
+  <textarea id="adminCurriculumText" rows="10" placeholder="Paste the approved curriculum lessons here..."></textarea>
+  <button onclick="publishCurriculum()">📚 Save / Publish Curriculum</button><p id="curriculumAdminStatus"></p>
+  <h3>📅 Course email settings</h3><p class="email-preview">Choose and save each child’s start and end dates in the registration card. The saved dates will appear in the child’s record and curriculum access screen. Email sending still needs your EmailJS account settings.</p>
+  <button class="secondary" onclick="adminSignOut()">Admin Sign Out</button>
+ </div>
+</section>
+<section id="community" class="hidden"><h2 data-en="💗 Our Happy Community" data-ar="💗 مجتمعنا السعيد">💗 Our Happy Community</h2>
+ <div class="card"><h3 data-en="🌸 Lovely Comments" data-ar="🌸 تعليقات لطيفة">🌸 Lovely Comments</h3><p>Share kind words, encouragement and little happy moments.</p>
+  <textarea id="commentInput" placeholder="Write a lovely comment... 💗"></textarea><div class="emoji-tray" data-target="commentInput"><button type="button">💗</button><button type="button">💕</button><button type="button">💖</button><button type="button">✨</button><button type="button">🌟</button><button type="button">🌸</button><button type="button">🦋</button><button type="button">🧸</button><button type="button">🥰</button><button type="button">😍</button><button type="button">🎀</button><button type="button">🌈</button></div>
+  <button onclick="postCommunity('comments','commentInput','commentStatus')">Post Comment 💌</button><p id="commentStatus"></p><div id="commentsFeed"></div>
+ </div>
+ <div class="card"><h3 data-en="🧸 Moms & Little Stars Chat" data-ar="🧸 دردشة الماميز والنجوم الصغيرين">🧸 Moms & Little Stars Chat</h3><p>Messages are visible to the academy community and are subject to admin moderation. Please do not share private information.</p>
+  <textarea id="chatInput" placeholder="Say something sweet... 💬"></textarea><div class="emoji-tray" data-target="chatInput"><button type="button">💗</button><button type="button">💕</button><button type="button">✨</button><button type="button">🌟</button><button type="button">🌸</button><button type="button">🧸</button><button type="button">🥳</button><button type="button">🥰</button><button type="button">👏</button><button type="button">🎤</button><button type="button">🎀</button><button type="button">🌈</button></div>
+  <button onclick="postCommunity('chat','chatInput','chatStatus')">Send Message 💌</button><p id="chatStatus"></p><div id="chatFeed"></div>
+ </div></section>
+<section id="contact" class="hidden"><h2 data-en="Contact Us" data-ar="تواصلي معنا">Contact Us</h2><div class="cards"><article class="card"><h3>WhatsApp</h3><p>01201965488</p><a href="https://wa.me/201201965488" target="_blank" rel="noopener">Chat with us</a></article><article class="card"><h3>Email</h3><p>voiceglowkids2026@gmail.com</p><a href="mailto:voiceglowkids2026@gmail.com">Send an email</a></article><article class="card"><h3>Facebook</h3><a href="https://www.facebook.com/share/1EFtXvNDUU/" target="_blank" rel="noopener">Visit our Facebook page</a></article></div></section>
+</main>
+
+<section id="youngSchoolReporter" class="section reporter-section child-only hidden">
+  <div class="reporter-heading">
+    <span class="reporter-kicker">🎙️ VOICE GLOW KIDS ACADEMY</span>
+    <h2>Young School Reporter</h2>
+    <p>Let's interview our school principal!</p>
+  </div>
+  <div class="reporter-hero">
+    <img src="assets/young-school-reporter-design.png" alt="Young School Reporter studio design with a student presenter and teddy bear">
+    <div>
+      <h3>Lights, microphone, confidence!</h3>
+      <p>Prepare your questions, practice your voice, and become a confident young presenter.</p>
+      <button type="button" onclick="reporterSpeak('intro')">▶ Listen to the introduction</button>
+    </div>
+  </div>
+  <div class="reporter-grid">
+    <article class="reporter-card">
+      <h3>⭐ Lesson Steps</h3>
+      <label><input type="checkbox"> Listen to the sample introduction</label>
+      <label><input type="checkbox"> Prepare your questions</label>
+      <label><input type="checkbox"> Practice your voice</label>
+      <label><input type="checkbox"> Record your interview</label>
+      <label><input type="checkbox"> Share your work</label>
+    </article>
+    <article class="reporter-card">
+      <h3>💬 Suggested Questions</h3>
+      <ol>
+        <li>What inspired you to become a school principal?</li>
+        <li>What is your favorite thing about our school?</li>
+        <li>What makes a good student?</li>
+        <li>How do you encourage students to achieve their dreams?</li>
+        <li>What new activities would you like to introduce at school?</li>
+        <li>What advice would you give to students who feel shy?</li>
+        <li>What is your happiest memory as a principal?</li>
+        <li>What message would you like to share with all students?</li>
+      </ol>
+      <button type="button" onclick="reporterSpeak('questions')">🔊 Hear the questions</button>
+    </article>
+    <article class="reporter-card reporter-record">
+      <h3>🎧 Your Recording</h3>
+      <p>Practice your presenter voice and record your introduction or interview.</p>
+      <button type="button" id="reporterStart">🔴 Start Recording</button>
+      <button type="button" id="reporterStop" disabled>■ Stop</button>
+      <audio id="reporterPlayback" controls class="hidden"></audio>
+      <p id="reporterStatus" aria-live="polite">Your recording stays on this device until you choose to share it.</p>
+    </article>
+  </div>
+  <div class="reporter-grid reporter-bottom">
+    <article class="reporter-card">
+      <h3>💡 Little Reporter Tips</h3>
+      <ul>
+        <li>Speak clearly and smile.</li>
+        <li>Use a friendly tone.</li>
+        <li>Ask one question at a time.</li>
+        <li>Listen carefully to the answer.</li>
+        <li>Be confident and respectful!</li>
+      </ul>
+    </article>
+    <article class="reporter-card">
+      <h3>🌈 My Reporter Journal</h3>
+      <p>How did you feel today?</p>
+      <select id="reporterMood">
+        <option value="">Choose your feeling</option>
+        <option>Happy</option><option>Excited</option><option>Calm</option>
+        <option>Proud</option><option>A little shy</option>
+      </select>
+      <textarea id="reporterReflection" rows="4" placeholder="Write about your experience..."></textarea>
+      <button type="button" onclick="saveReporterJournal()">♡ Save My Reflection</button>
+      <p id="reporterJournalStatus" aria-live="polite"></p>
+    </article>
+  </div>
+  <p class="reporter-signoff">🧸 Dobby says: “You did a wonderful job, little reporter. Keep shining!”</p>
+</section>
+
+<footer><h2 style="color:white">Dream • Speak • Shine 💗</h2><p>With love, Amira Hesham — Coach</p><p>© 2026 Voice Glow Kids Academy. All Rights Reserved.</p><p>All academy materials are protected by copyright. Unauthorized copying or redistribution is prohibited.</p><p><a style="color:#ffe1e9" href="https://wa.me/201201965488">WhatsApp: 01201965488</a> • <a style="color:#ffe1e9" href="mailto:voiceglowkids2026@gmail.com">Email Us</a></p></footer>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,sendEmailVerification} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import {getDatabase,ref,push,set,get,update,remove,onValue} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+const config={apiKey:"AIzaSyCkSGRpqT1nhsmcSneJw4XFeqB06-sBdbg",authDomain:"voiceover-kids.firebaseapp.com",databaseURL:"https://voiceover-kids-default-rtdb.firebaseio.com",projectId:"voiceover-kids",storageBucket:"voiceover-kids.firebasestorage.app",messagingSenderId:"225411166192",appId:"1:225411166192:web:1545002c1488c21c53b735",measurementId:"G-MKRQGY9QPH"};
+const app=initializeApp(config),auth=getAuth(app),db=getDatabase(app);
+
+// Set this to the UID of the dedicated admin user created in Firebase Authentication.
+// Do not put an admin password in the website code.
+const ADMIN_UID="18VstNHmK4gwEr7e7sZAzoKYEW83";
+// Configure these PUBLIC EmailJS values in your own EmailJS account before enabling automatic parent schedule emails.
+const VGK_EMAILJS={publicKey:"PASTE_EMAILJS_PUBLIC_KEY",serviceId:"PASTE_EMAILJS_SERVICE_ID",templateId:"PASTE_EMAILJS_TEMPLATE_ID"};
+const byId=id=>document.getElementById(id);
+window.activeChildAccess=window.activeChildAccess||null;
+window.show=function(id){
+ const publicPages=new Set(["home","account","join","admin"]);
+ const user=auth.currentUser;
+ if(!publicPages.has(id)&&(!user||!user.emailVerified)){
+  document.querySelectorAll("main > div, main > section").forEach(x=>x.classList.add("hidden"));
+  byId("account").classList.remove("hidden");
+  const msg=byId("message");if(msg)msg.textContent="Please sign in with your verified parent account to access the members area.";
+  window.scrollTo({top:0,behavior:"smooth"});return;
+ }
+ if((id==="youngSchoolReporter"||id==="curriculum")&&!window.activeChildAccess){
+  document.querySelectorAll("main > div, main > section").forEach(x=>x.classList.add("hidden"));
+  byId("curriculum").classList.remove("hidden");
+  const status=byId("curriculumStatus");if(status)status.textContent="Please enter your child's approved name and access code first.";
+  window.scrollTo({top:0,behavior:"smooth"});return;
+ }
+ document.querySelectorAll("main > div, main > section").forEach(x=>x.classList.add("hidden"));
+ if(id==="home")byId("home").classList.remove("hidden");else byId(id)?.classList.remove("hidden");
+ if(id==="parentDashboard"&&typeof window.loadParentDashboard==="function")window.loadParentDashboard();
+ window.scrollTo({top:0,behavior:"smooth"});
+};
+let currentLanguage=localStorage.getItem("vgkLanguage")||"en";
+window.toggleLanguage=function(){currentLanguage=currentLanguage==="en"?"ar":"en";localStorage.setItem("vgkLanguage",currentLanguage);applyLanguage();};
+const VGK_TRANSLATIONS={
+"Home":"الرئيسية","My Studio":"استوديو الصوت","Voice Acting":"التمثيل الصوتي","For Parents":"للأمهات","Parent Dashboard":"لوحة متابعة ولي الأمر","Course Info":"معلومات الكورس","My Curriculum":"منهجي","Join Course":"الانضمام للكورس","My Account":"حسابي","Contact":"تواصل معنا","Policies":"السياسات","💬 Comments & Chat":"💬 التعليقات والدردشة","Admin":"الإدارة",
+"Train • Practice • Shine ✨":"تدرّب • مارس • تألّق ✨","A happy place where little voices learn, practice and grow with confidence!":"مكان ممتع تتعلم فيه الأصوات الصغيرة وتتدرب وتنمو بثقة!","Join Our Course 💗":"انضم إلى كورسنا 💗","Record, listen and improve your voice.":"سجّل صوتك واستمع إليه وطوّره.","Open Studio":"افتح الاستوديو","Play characters and bring stories to life.":"مثّل الشخصيات واجعل القصص تنبض بالحياة.","Explore":"استكشف","Follow, support and cheer.":"تابع وشجّع وساند.","Open":"فتح","Celebrate your learning journey.":"احتفل برحلة تعلمك.","My Certificate":"إنجازاتي","View Certificate":"عرض البطاقة",
+"Meet Dobby! Your Teddy Bear Friend 🧸":"تعرّف على دوبي! صديقك الدبدوب 🧸","Type your name and Dobby will welcome you personally.":"اكتب اسمك وسيُرحّب بك دوبي بنفسه.","Child's name":"اسم الطفل","Your name":"اسمك","Hello, little star! I'm Dobby. What's your name?":"مرحبًا أيها النجم الصغير! أنا دوبي. ما اسمك؟","☀️ Good Morning":"☀️ صباح الخير","🌙 Good Evening":"🌙 مساء الخير","🔊 Hear Welcome Again":"🔊 استمع للترحيب مرة أخرى","Our Training Areas 🌟":"مجالات التدريب 🌟","✓ Voice Control & Confidence":"✓ التحكم في الصوت والثقة","✓ Emotions & Voice Acting":"✓ التعبير عن المشاعر والتمثيل الصوتي","✓ Expressive Reading & Speaking":"✓ القراءة والتحدث بتعبير","✓ Fun Voice Activities":"✓ أنشطة صوتية ممتعة","Our Music 🎵":"موسيقانا 🎵","Enjoy Amira's original music.":"استمتع بموسيقى أميرة الأصلية.",
+"🎙 My Voice Studio":"🎙 استوديو صوتي","Hello! My name is ... and I love using my voice!":"مرحبًا! اسمي ... وأحب استخدام صوتي!","Start Recording":"ابدأ التسجيل","Stop":"إيقاف","🎭 Voice Acting Corner":"🎭 ركن التمثيل الصوتي","Brave Lion":"الأسد الشجاع","I am brave, strong and ready to roar!":"أنا شجاع وقوي ومستعد للزئير!","Practice":"تدرّب","Happy Fairy":"الجنية السعيدة","Hello, my friends! Let's make today magical!":"مرحبًا يا أصدقائي! لنجعل يومنا مليئًا بالسحر!","Space Explorer":"مستكشف الفضاء","Three, two, one! Let's explore the universe!":"ثلاثة، اثنان، واحد! هيا نستكشف الكون!",
+"💗 Mommy's Encouragement Corner":"💗 ركن تشجيع الماميز","I'm so proud of you, my little star!":"أنا فخورة بك جدًا يا نجمي الصغير!","Your voice is beautiful. Keep shining!":"صوتك جميل. استمر في التألق!","Every time you practice, you become more confident.":"في كل مرة تتدرب فيها، تزداد ثقتك بنفسك.","You are brave, creative and special!":"أنت شجاع ومبدع ومميز!","🌷 Mommy's Daily Hug":"🌷 رسالة حب يومية من ماما","Show Another Message 💗":"اعرض رسالة أخرى 💗","Send a Message to Your Child":"أرسل رسالة لطفلك","Write your lovely message...":"اكتب رسالتك الجميلة...","Send Message":"إرسال الرسالة","Sign in with the verified parent account used at enrollment to see only your own child’s course dates and journal.":"سجّل الدخول بحساب ولي الأمر الموثّق المستخدم عند التسجيل لمتابعة مواعيد كورس طفلك وجرناله فقط.","Refresh My Child’s Progress":"تحديث تقدم طفلي",
+"📚 Course Information":"📚 معلومات الكورس","Schedule":"المواعيد","Time":"الوقت","Duration":"المدة","Monthly Fee":"الرسوم الشهرية","Sunday & Tuesday":"الأحد والثلاثاء","One month":"شهر واحد","800 EGP — paid in advance":"800 جنيه — تُدفع مقدمًا",
+"🌸 Join Voice Glow Kids":"🌸 انضم إلى فويس جلو كيدز","Parent's full name":"الاسم الكامل لولي الأمر","Child's full name":"الاسم الكامل للطفل","Child's age":"عمر الطفل","Parent's phone number":"رقم هاتف ولي الأمر","Parent's email":"البريد الإلكتروني لولي الأمر","Voice Over Training":"تدريب التعليق الصوتي","Other Training":"تدريب آخر","Anything we should know?":"هل هناك أي معلومات نحتاج إلى معرفتها؟","Monthly Program Fee: 800 EGP":"رسوم البرنامج الشهرية: 800 جنيه","Duration: One month • Full payment in advance":"المدة: شهر واحد • الدفع كاملًا مقدمًا","Payment via Vodafone Cash":"الدفع عبر فودافون كاش","After payment, please send your payment confirmation via WhatsApp. Your enrollment will be confirmed after payment verification.":"بعد الدفع، يُرجى إرسال تأكيد الدفع عبر واتساب. سيتم تأكيد الاشتراك بعد مراجعة الدفع.","Send Payment Confirmation on WhatsApp":"إرسال تأكيد الدفع عبر واتساب","Open Registration Form":"فتح استمارة التسجيل","Submit Website Registration":"إرسال التسجيل عبر الموقع","Please create a parent account and verify your email under":"يُرجى إنشاء حساب لولي الأمر وتأكيد البريد الإلكتروني من قسم","My Account":"حسابي","Important:":"مهم:","Completing the form does not confirm enrollment. Confirmation is sent after payment verification.":"إكمال الاستمارة لا يؤكد الاشتراك. يتم إرسال التأكيد بعد مراجعة الدفع.",
+"🔐 My Account":"🔐 حسابي","Email address":"البريد الإلكتروني","Password":"كلمة المرور","Create Account":"إنشاء حساب","Sign In":"تسجيل الدخول","Resend Verification Email":"إعادة إرسال رسالة التأكيد","Sign Out":"تسجيل الخروج","🔒 Little Voice Stars — Private Curriculum":"🔒 منهج نجوم الصوت الصغير — مساحة خاصة","This learning space is private. Sign in with the parent's verified account, then enter the unique password assigned to your child by the academy.":"هذه المساحة خاصة. سجّل الدخول بحساب ولي الأمر الموثّق، ثم أدخل كلمة المرور المخصصة لطفلك من الأكاديمية.","Child's private password":"كلمة مرور الطفل الخاصة","🔑 Unlock My Curriculum":"🔑 افتح منهجي","🌈 Welcome, Little Star!":"🌈 أهلًا بك أيها النجم الصغير!","Your special learning journey starts here.":"تبدأ رحلتك التعليمية المميزة من هنا.",
+"🎓 My Fun Achievement Card":"🎓 بطاقة إنجازي المرحة","This is a fun encouragement feature only, not an official or accredited certificate.":"هذه بطاقة تشجيعية مرحة فقط وليست شهادة رسمية أو معتمدة.","🌸 VOICE GLOW KIDS 🌸":"🌸 فويس جلو كيدز 🌸","Certificate of Achievement":"بطاقة إنجاز","This certificate is proudly presented to":"تُقدّم هذه البطاقة بكل فخر إلى","Child's name":"اسم الطفل","Little Star":"النجم الصغير","For completing the Voice Glow Kids journey with creativity, confidence, joyful expression and a shining voice. 🎙️✨":"لإكمال رحلة فويس جلو كيدز بإبداع وثقة وتعبير مبهج وصوت متألق. 🎙️✨","Date:":"التاريخ:","Amira Hesham — Coach":"أميرة هشام — مدربة","Keep shining, Little Voice! 🌈":"استمر في التألق يا صاحب الصوت الصغير! 🌈","Update Name":"تحديث الاسم","Print / Save PDF":"طباعة / حفظ PDF",
+"Important Program Notice":"تنويه مهم عن البرنامج","Certificate Disclaimer":"إخلاء مسؤولية الشهادة","Voice Glow Kids Academy does not provide accredited, officially recognized, or government-issued certificates.":"أكاديمية فويس جلو كيدز لا تصدر شهادات معتمدة أو معترفًا بها رسميًا أو صادرة عن جهة حكومية.","Our program focuses on practical learning, skill development, creativity, and building children's confidence through interactive activities. Any participation or reward certificates, if offered, are for appreciation and encouragement only and do not represent official qualifications or accredited certification.":"يركز برنامجنا على التعلم العملي وتنمية المهارات والإبداع وبناء ثقة الأطفال من خلال أنشطة تفاعلية. وأي بطاقات مشاركة أو مكافآت تُقدّم هي للتقدير والتشجيع فقط ولا تمثل مؤهلات رسمية أو شهادات معتمدة.","Participation in the program does not guarantee professional qualifications or employment.":"المشاركة في البرنامج لا تضمن الحصول على مؤهلات مهنية أو فرصة عمل.","Copyright & Intellectual Property":"حقوق النشر والملكية الفكرية","© 2026 Voice Glow Kids Academy. All Rights Reserved.":"© 2026 أكاديمية فويس جلو كيدز. جميع الحقوق محفوظة.","Created and Managed by Amira Hesham — Coach":"إعداد وإدارة أميرة هشام — مدربة",
+"🔐 Admin Dashboard":"🔐 لوحة تحكم الإدارة","Admin-only sign in. Use the dedicated administrator email and password. Parent accounts and child codes cannot open this dashboard.":"هذا تسجيل دخول منفصل للإدارة ولا يستخدم حساب الطفل.","Admin email address":"البريد الإلكتروني للإدارة","Admin password":"كلمة مرور الإدارة","Admin Sign In":"تسجيل دخول الإدارة","Registration Requests":"طلبات التسجيل","Refresh":"تحديث","No data loaded yet.":"لم يتم تحميل بيانات بعد.","📝 Children Journals":"📝 جرنالات الأطفال","Parent Messages":"رسائل أولياء الأمور","📚 Curriculum Publisher":"📚 إدارة المنهج","Only publish lessons after you have finalized the material.":"لا تنشر الدروس إلا بعد الانتهاء من إعداد المحتوى.","Paste the approved curriculum lessons here...":"الصق دروس المنهج المعتمدة هنا...","📚 Save / Publish Curriculum":"📚 حفظ / نشر المنهج","📅 Course email settings":"📅 إعدادات رسائل مواعيد الكورس","Choose and save each child’s start and end dates in the registration card. The saved dates will appear in the child’s record and curriculum access screen. Email sending still needs your EmailJS account settings.":"اختر واحفظ تاريخ ووقت بداية ونهاية الكورس لكل طفل من بطاقة التسجيل. ستظهر المواعيد المحفوظة في سجل الطفل وصفحة دخول المنهج. إرسال البريد يحتاج إلى إعدادات حساب EmailJS الخاص بك.","Admin Sign Out":"تسجيل خروج الإدارة",
+"💗 Our Happy Community":"💗 مجتمعنا السعيد","🌸 Lovely Comments":"🌸 تعليقات لطيفة","Share kind words, encouragement and little happy moments.":"شارك كلمات لطيفة وتشجيعًا ولحظات سعيدة.","Write a lovely comment... 💗":"اكتب تعليقًا لطيفًا... 💗","Post Comment 💌":"نشر التعليق 💌","🧸 Moms & Little Stars Chat":"🧸 دردشة الماميز والنجوم الصغيرين","Messages are visible to the academy community and are subject to admin moderation. Please do not share private information.":"الرسائل ظاهرة لمجتمع الأكاديمية وتخضع لمراجعة الإدارة. يُرجى عدم مشاركة معلومات شخصية.","Say something sweet... 💬":"اكتب كلمة جميلة... 💬","Send Message 💌":"إرسال الرسالة 💌","Contact Us":"تواصل معنا","Chat with us":"تحدث معنا","Send an email":"إرسال بريد إلكتروني","Visit our Facebook page":"زيارة صفحة فيسبوك",
+"Young School Reporter":"مراسل المدرسة الصغير","Let's interview our school principal!":"هيا نحاور مدير المدرسة!","Lights, microphone, confidence!":"أضواء وميكروفون وثقة!","Prepare your questions, practice your voice, and become a confident young presenter.":"جهّز أسئلتك وتدرّب على صوتك وكن مقدمًا صغيرًا واثقًا.","▶ Listen to the introduction":"▶ استمع إلى المقدمة","⭐ Lesson Steps":"⭐ خطوات الدرس","Listen to the sample introduction":"استمع إلى المقدمة النموذجية","Prepare your questions":"جهّز أسئلتك","Practice your voice":"تدرّب على صوتك","Record your interview":"سجّل حوارك","Share your work":"شارك عملك","💬 Suggested Questions":"💬 أسئلة مقترحة","What inspired you to become a school principal?":"ما الذي ألهمك لتصبح مديرًا للمدرسة؟","What is your favorite thing about our school?":"ما أكثر شيء تحبه في مدرستنا؟","What makes a good student?":"ما الذي يجعل الطالب متميزًا؟","How do you encourage students to achieve their dreams?":"كيف تشجع الطلاب على تحقيق أحلامهم؟","What new activities would you like to introduce at school?":"ما الأنشطة الجديدة التي تود إضافتها إلى المدرسة؟","What advice would you give to students who feel shy?":"ما النصيحة التي تقدمها للطلاب الذين يشعرون بالخجل؟","What is your happiest memory as a principal?":"ما أسعد ذكرى لك كمدير للمدرسة؟","What message would you like to share with all students?":"ما الرسالة التي تود مشاركتها مع جميع الطلاب؟","🔊 Hear the questions":"🔊 استمع إلى الأسئلة","🎧 Your Recording":"🎧 تسجيلك الصوتي","Practice your presenter voice and record your introduction or interview.":"تدرّب على صوت المذيع وسجّل مقدمتك أو حوارك.","■ Stop":"■ إيقاف","Your recording stays on this device until you choose to share it.":"سيظل تسجيلك على هذا الجهاز حتى تختار مشاركته.","💡 Little Reporter Tips":"💡 نصائح للمراسل الصغير","Speak clearly and smile.":"تحدث بوضوح وابتسم.","Use a friendly tone.":"استخدم نبرة ودودة.","Ask one question at a time.":"اسأل سؤالًا واحدًا في كل مرة.","Listen carefully to the answer.":"استمع إلى الإجابة جيدًا.","Be confident and respectful!":"كن واثقًا ومحترمًا!","🌈 My Reporter Journal":"🌈 جرنالي كمراسل","How did you feel today?":"كيف كان شعورك اليوم؟","Choose your feeling":"اختر شعورك","Happy":"سعيد","Excited":"متحمس","Calm":"هادئ","Proud":"فخور","A little shy":"خجول قليلًا","Write about your experience...":"اكتب عن تجربتك...","♡ Save My Reflection":"♡ احفظ تدوينتي","🧸 Dobby says: “You did a wonderful job, little reporter. Keep shining!”":"🧸 يقول دوبي: «أحسنت يا مراسلنا الصغير. استمر في التألق!»","Dream • Speak • Shine 💗":"احلم • تحدث • تألق 💗","With love, Amira Hesham — Coach":"مع الحب، أميرة هشام — مدربة","All academy materials are protected by copyright. Unauthorized copying or redistribution is prohibited.":"جميع مواد الأكاديمية محمية بحقوق النشر. يُمنع النسخ أو إعادة التوزيع دون إذن.",
+"Account created! Please check your inbox and verify your email before signing in.":"تم إنشاء الحساب! افحص بريدك الإلكتروني وأكّد الحساب قبل تسجيل الدخول.","A new verification email has been sent. Please check your inbox.":"تم إرسال رسالة تأكيد جديدة. افحص بريدك الإلكتروني.","Please verify your email first. Check your inbox for the confirmation link.":"يُرجى تأكيد بريدك الإلكتروني أولًا. افحص صندوق الوارد بحثًا عن رابط التأكيد.","Please sign in with a verified email first.":"يُرجى تسجيل الدخول باستخدام بريد إلكتروني تم تأكيده أولًا.","Please sign in with a verified parent email first. Open My Account, create your account, verify your email, then return here.":"يُرجى تسجيل الدخول ببريد ولي أمر موثّق أولًا. افتح حسابي وأنشئ الحساب وأكّد بريدك ثم عُد إلى هنا.","Please sign in with the verified parent account first.":"يُرجى تسجيل الدخول بحساب ولي الأمر الموثّق أولًا.","Please sign in with your verified parent account first.":"يُرجى تسجيل الدخول بحساب ولي الأمر الموثّق الخاص بك أولًا.","Please sign in with the verified parent account before saving the journal.":"يُرجى تسجيل الدخول بحساب ولي الأمر الموثّق قبل حفظ الجرنال.","Please sign in with the authorized admin account.":"يُرجى تسجيل الدخول بحساب الإدارة المصرّح به.","Not signed in":"لم يتم تسجيل الدخول","Signed in:":"تم تسجيل الدخول:","verified":"موثّق","not verified":"غير موثّق","Welcome back!":"أهلًا بعودتك!","Please complete parent name, child name, age, phone and email.":"يُرجى إدخال اسم ولي الأمر واسم الطفل والعمر والهاتف والبريد الإلكتروني.","Checking your registration...":"جارٍ مراجعة التسجيل...","Registration received successfully! The academy will review payment and confirm your child's place.":"تم استلام التسجيل بنجاح! ستراجع الأكاديمية الدفع وتؤكد حجز مكان الطفل.","Could not load data:":"تعذّر تحميل البيانات:","Loading registrations...":"جارٍ تحميل طلبات التسجيل...","Loading journals...":"جارٍ تحميل الجرنالات...","Loading messages...":"جارٍ تحميل الرسائل...","Loading your child's information...":"جارٍ تحميل بيانات طفلك...","No registration requests yet.":"لا توجد طلبات تسجيل حتى الآن.","No journals saved yet.":"لم يتم حفظ أي جرنالات حتى الآن.","No journal entry has been saved yet.":"لم يتم حفظ أي تدوينة حتى الآن.","No parent messages yet.":"لا توجد رسائل من أولياء الأمور حتى الآن.","Be the first to leave a lovely comment! 💗":"كن أول من يترك تعليقًا لطيفًا! 💗","No messages yet. Say hello! 🧸":"لا توجد رسائل بعد. قل مرحبًا! 🧸","Community feed is unavailable. Please check database rules.":"تعذّر عرض منشورات المجتمع. يُرجى مراجعة قواعد قاعدة البيانات.","Please write a message.":"يُرجى كتابة رسالة.","Write a message first, little star! 💗":"اكتب رسالة أولًا أيها النجم الصغير! 💗","Let's keep our words kind and sweet. 🌸":"لنجعل كلماتنا لطيفة وجميلة. 🌸","Message sent!":"تم إرسال الرسالة!","Sent with love! 💌":"تم الإرسال بكل حب! 💌","Could not send message.":"تعذّر إرسال الرسالة.","Please enter a kind, non-empty message.":"يُرجى كتابة رسالة لطيفة وغير فارغة.","Delete this message?":"هل تريد حذف هذه الرسالة؟","Delete this parent message?":"هل تريد حذف رسالة ولي الأمر؟","Edit parent message:":"تعديل رسالة ولي الأمر:","Edit your message:":"تعديل رسالتك:","Edit":"تعديل","Delete":"حذف","No approved child access was found for this parent account yet.":"لم يتم العثور على دخول معتمد لطفل مرتبط بحساب ولي الأمر هذا حتى الآن.","No approved child enrollment is linked to this account yet.":"لا يوجد اشتراك طفل معتمد مرتبط بهذا الحساب حتى الآن.","Enter your child's name and private password.":"أدخل اسم طفلك وكلمة المرور الخاصة به.","Enter the 6-digit code issued by the academy.":"أدخل الكود المكوّن من 6 أرقام والصادر من الأكاديمية.","Course dates have not been saved yet.":"لم يتم حفظ مواعيد الكورس بعد.","Course dates saved successfully.":"تم حفظ مواعيد الكورس بنجاح.","Choose a valid start date and end date/time.":"اختر تاريخ ووقت بداية ونهاية صحيحين.","Choose valid course start and end date/times first.":"اختر تاريخ ووقت بداية ونهاية الكورس بشكل صحيح أولًا.","EmailJS is not configured yet. Add your public key, service ID and template ID in the setup section.":"لم يتم إعداد EmailJS بعد. أضف المفتاح العام ومعرّف الخدمة والقالب في قسم الإعدادات.","Curriculum published. Only approved child accounts can unlock it in the website.":"تم نشر المنهج. يمكن لحسابات الأطفال المعتمدة فقط فتحه على الموقع.","Curriculum unlocked. Have fun, Little Star! ✨":"تم فتح المنهج. استمتع يا نجمنا الصغير! ✨","Admin access granted.":"تم منح صلاحية الإدارة.","Admin access is not configured.":"لم يتم إعداد صلاحية الإدارة.","Admin sign-in failed:":"فشل تسجيل دخول الإدارة:","Microphone permission is required.":"يلزم السماح باستخدام الميكروفون.","Microphone access was not granted. Please allow microphone access and try again.":"لم يتم السماح باستخدام الميكروفون. اسمح باستخدام الميكروفون ثم حاول مرة أخرى.","Every little practice makes you stronger.":"كل تدريب صغير يجعلك أقوى.","Mistakes help us learn. Keep going, sweetheart!":"الأخطاء تساعدنا على التعلم. واصل المحاولة!","I love hearing you try something new.":"أحب أن أراك تجرب شيئًا جديدًا.","Keep shining, little voice. Mommy believes in you!":"استمر في التألق يا صاحب الصوت الجميل. ماما تؤمن بك!","Good morning, little stars! ☀️":"صباح الخير يا نجومنا الصغار! ☀️","Good night, little stars! Sweet dreams! 🌙":"تصبحون على خير يا نجومنا الصغار! أحلام سعيدة! 🌙","Hello, little stars! Let's shine! ✨":"مرحبًا يا نجومنا الصغار! هيا نتألق! ✨","Good morning, everyone! Welcome to our school radio. Today, we are delighted to interview our school principal. Let's get started!":"صباح الخير جميعًا! أهلًا بكم في إذاعتنا المدرسية. يسعدنا اليوم إجراء حوار مع مدير مدرستنا. هيا نبدأ!","Approve + Generate Child Code":"موافقة + إنشاء كلمة مرور الطفل","Course start (date & time)":"بداية الكورس (التاريخ والوقت)","Course end (date & time)":"نهاية الكورس (التاريخ والوقت)","📧 Send Course Dates to Parent":"📧 إرسال مواعيد الكورس لولي الأمر","Schedule email sent to the parent.":"تم إرسال رسالة المواعيد إلى ولي الأمر.","Save / Publish Curriculum":"حفظ / نشر المنهج","No data loaded yet.":"لم يتم تحميل بيانات بعد.","Child name:":"اسم الطفل:","Child age:":"عمر الطفل:","Parent name:":"اسم ولي الأمر:","Parent email:":"بريد ولي الأمر:","Parent phone:":"هاتف ولي الأمر:","Age:":"العمر:","Course:":"الكورس:","Feeling:":"الشعور:","Notes:":"ملاحظات:","Pending":"قيد المراجعة","Approved":"تمت الموافقة","Other":"أخرى","Not selected":"لم يتم الاختيار","Not set":"غير محدد","No reflection":"لا توجد تدوينة","No reflection written yet.":"لم تتم كتابة تدوينة بعد.","Add lesson content first.":"أضف محتوى الدرس أولًا.","Could not publish:":"تعذّر النشر:","Could not save dates:":"تعذّر حفظ المواعيد:","Could not assign child access:":"تعذّر إنشاء دخول الطفل:","Could not send:":"تعذّر الإرسال:","Could not edit message:":"تعذّر تعديل الرسالة:","Could not delete message:":"تعذّر حذف الرسالة:","Could not edit registration:":"تعذّر تعديل التسجيل:","Could not delete registration:":"تعذّر حذف التسجيل:","Permanently delete this registration request?":"هل تريد حذف طلب التسجيل نهائيًا؟"
+};
+const vgkOriginalText=new WeakMap(),vgkOriginalAttrs=new WeakMap();
+function translateNode(node){if(node.nodeType===Node.TEXT_NODE){if(!vgkOriginalText.has(node))vgkOriginalText.set(node,node.nodeValue);const original=vgkOriginalText.get(node),trim=original.trim();node.nodeValue=currentLanguage==="ar"&&VGK_TRANSLATIONS[trim]?original.replace(trim,VGK_TRANSLATIONS[trim]):original;}else if(node.nodeType===Node.ELEMENT_NODE){for(const attr of ["placeholder","aria-label","title"]){if(!vgkOriginalAttrs.has(node))vgkOriginalAttrs.set(node,{});const saved=vgkOriginalAttrs.get(node);if(!(attr in saved))saved[attr]=node.getAttribute(attr);const original=saved[attr];if(original!==null)node.setAttribute(attr,currentLanguage==="ar"&&VGK_TRANSLATIONS[original]?VGK_TRANSLATIONS[original]:original);}if(node.matches("option")){if(!vgkOriginalText.has(node))vgkOriginalText.set(node,node.textContent);const original=vgkOriginalText.get(node);node.textContent=currentLanguage==="ar"&&VGK_TRANSLATIONS[original.trim()]?VGK_TRANSLATIONS[original.trim()]:original;}}}
+function applyLanguage(){const ar=currentLanguage==="ar";document.documentElement.lang=currentLanguage;document.documentElement.dir=ar?"rtl":"ltr";document.body.dir=ar?"rtl":"ltr";document.body.classList.toggle("arabic-mode",ar);document.querySelectorAll("[data-en][data-ar]").forEach(el=>{el.textContent=el.dataset[currentLanguage];});const b=byId("languageToggle");if(b)b.textContent=ar?"English":"العربية";const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT|NodeFilter.SHOW_ELEMENT);let n;while(n=walker.nextNode())translateNode(n);}
+const languageObserver=new MutationObserver(records=>{if(currentLanguage!=="ar")return;for(const rec of records){for(const node of rec.addedNodes){if(node.nodeType===Node.ELEMENT_NODE){translateNode(node);const w=document.createTreeWalker(node,NodeFilter.SHOW_TEXT|NodeFilter.SHOW_ELEMENT);let child;while(child=w.nextNode())translateNode(child);}else translateNode(node);}}});
+languageObserver.observe(document.body,{childList:true,subtree:true});
+applyLanguage();
+
+window.signUp=async()=>{try{const credential=await createUserWithEmailAndPassword(auth,byId("email").value.trim(),byId("password").value);await sendEmailVerification(credential.user);byId("message").textContent="Account created! Please check your inbox and verify your email before signing in.";await signOut(auth);}catch(e){byId("message").textContent=e.message;}};
+window.signIn=async()=>{try{const credential=await signInWithEmailAndPassword(auth,byId("email").value.trim(),byId("password").value);await credential.user.reload();if(!credential.user.emailVerified){await signOut(auth);byId("message").textContent="Please verify your email first. Check your inbox for the confirmation link.";return;}byId("message").textContent="Welcome back!";}catch(e){byId("message").textContent=e.message;}};
+window.resendVerification=async()=>{try{const e=byId("email").value.trim(),p=byId("password").value;const c=await signInWithEmailAndPassword(auth,e,p);await sendEmailVerification(c.user);await signOut(auth);byId("message").textContent="A new verification email has been sent. Please check your inbox.";}catch(e){byId("message").textContent=e.message;}};
+window.signOutUser=async()=>{await signOut(auth);};
+onAuthStateChanged(auth,user=>{byId("userInfo").textContent=user?"Signed in: "+user.email+(user.emailVerified?" • verified":" • not verified"):"Not signed in";document.querySelectorAll(".member-only").forEach(el=>el.classList.toggle("hidden",!user?.emailVerified));document.querySelectorAll(".child-only").forEach(el=>el.classList.add("hidden"));window.activeChildAccess=null;byId("curriculumContent")?.classList.add("hidden");byId("curriculum")?.classList.remove("hidden");if(user?.emailVerified){watchCommunity();}else if(!user){window.show("home");}});
+// Community posts: members can edit/delete their own posts; the authorized admin can moderate all posts.
+const communityFeeds={comments:"comments",chat:"communityChat"};let communityStarted=false;
+function watchCommunity(){if(communityStarted)return;communityStarted=true;for(const [kind,path] of Object.entries(communityFeeds)){onValue(ref(db,path),snap=>renderCommunity(kind,snap.val()||{}),err=>{const el=byId(kind==="comments"?"commentsFeed":"chatFeed");if(el)el.textContent="Community feed is unavailable. Please check database rules.";});}}
+function renderCommunity(kind,data){const host=byId(kind==="comments"?"commentsFeed":"chatFeed");if(!host)return;host.innerHTML="";const entries=Object.entries(data).sort((a,b)=>(a[1].createdAt||"").localeCompare(b[1].createdAt||""));if(!entries.length){host.textContent=kind==="comments"?"Be the first to leave a lovely comment! 💗":"No messages yet. Say hello! 🧸";return;}for(const [key,item] of entries){if(item.deleted)continue;const box=document.createElement("div");box.className="feed-item";const who=document.createElement("strong");who.textContent=item.displayName||((item.email||"Member").split("@")[0]);const body=document.createElement("p");body.textContent=item.text||"";const meta=document.createElement("div");meta.className="feed-meta";meta.textContent=(item.createdAt||"")+(item.editedAt?" • edited":"");box.append(who,body,meta);const canOwn=auth.currentUser&&item.uid===auth.currentUser.uid;const canAdmin=auth.currentUser&&auth.currentUser.uid===ADMIN_UID&&ADMIN_UID!=="PASTE_ADMIN_UID_HERE";if(canOwn||canAdmin){const actions=document.createElement("div");actions.className="feed-actions";if(canOwn){const edit=document.createElement("button");edit.className="secondary";edit.textContent="✏️ Edit";edit.onclick=()=>editCommunity(kind,key,item.text||"");actions.append(edit);}const del=document.createElement("button");del.className="secondary";del.textContent="🗑 Delete";del.onclick=()=>deleteCommunity(kind,key);actions.append(del);box.append(actions);}host.append(box);}}
+window.postCommunity=async(kind,inputId,statusId)=>{const status=byId(statusId),field=byId(inputId),text=field.value.trim();if(!auth.currentUser||!auth.currentUser.emailVerified){status.textContent="Please sign in with a verified email first.";return;}if(!text){status.textContent="Write a message first, little star! 💗";return;}if(hasBadWords(text)){status.textContent="Let's keep our words kind and sweet. 🌸";return;}try{await set(push(ref(db,communityFeeds[kind])),{uid:auth.currentUser.uid,email:auth.currentUser.email,displayName:auth.currentUser.email.split("@")[0],text,createdAt:new Date().toISOString()});field.value="";status.textContent="Sent with love! 💌";}catch(e){status.textContent="Could not send: "+e.message;}};
+window.editCommunity=async(kind,key,oldText)=>{if(!auth.currentUser)return;const next=prompt("Edit your message:",oldText);if(next===null)return;const text=next.trim();if(!text||hasBadWords(text))return alert("Please enter a kind, non-empty message.");try{const snap=await get(ref(db,communityFeeds[kind]+"/"+key));if(!snap.exists()||snap.val().uid!==auth.currentUser.uid)throw new Error("You can edit only your own message.");await update(ref(db,communityFeeds[kind]+"/"+key),{text,editedAt:new Date().toISOString()});}catch(e){alert(e.message);}};
+window.deleteCommunity=async(kind,key)=>{if(!auth.currentUser||!confirm("Delete this message?"))return;try{const path=communityFeeds[kind]+"/"+key;const snap=await get(ref(db,path));if(!snap.exists())return;const own=snap.val().uid===auth.currentUser.uid;const admin=auth.currentUser.uid===ADMIN_UID&&ADMIN_UID!=="PASTE_ADMIN_UID_HERE";if(!own&&!admin)throw new Error("You can delete only your own message.");await remove(ref(db,path));}catch(e){alert(e.message);}};
+document.querySelectorAll(".emoji-tray button").forEach(btn=>btn.addEventListener("click",()=>{const field=byId(btn.parentElement.dataset.target);if(!field)return;const start=field.selectionStart??field.value.length,end=field.selectionEnd??field.value.length;field.value=field.value.slice(0,start)+btn.textContent+field.value.slice(end);field.focus();field.selectionStart=field.selectionEnd=start+btn.textContent.length;}));
+window.submitJoin=async()=>{const status=byId("joinStatus"),btn=byId("submitJoinButton");if(btn)btn.disabled=true;status.textContent="Checking your registration...";try{if(!auth.currentUser||!auth.currentUser.emailVerified){status.textContent="Please sign in with a verified parent email first. Open My Account, create your account, verify your email, then return here.";return;}const enteredEmail=byId("contactEmail").value.trim()||auth.currentUser.email;if(enteredEmail.toLowerCase()!==auth.currentUser.email.toLowerCase()){status.textContent="Please use the same email address as your verified parent account.";return;}const data={parentName:byId("parentName").value.trim(),childName:byId("childName").value.trim(),childAge:byId("childAge").value,phone:byId("contactPhone").value.trim(),email:enteredEmail,training:byId("training").value,notes:byId("joinNotes").value.trim(),uid:auth.currentUser.uid,status:"pending",createdAt:new Date().toISOString()};if(!data.parentName||!data.childName||!data.childAge||!data.phone||!data.email){status.textContent="Please complete parent name, child name, age, phone and email.";return;}const result=await push(ref(db,"registrationRequests"),data);status.textContent="Registration received successfully! The academy will review payment and confirm your child's place.";byId("joinStatus").dataset.requestKey=result.key;}catch(e){console.error(e);status.textContent="Registration could not be saved: "+(e.code||e.message)+". Check Firebase connection and database rules.";}finally{if(btn)btn.disabled=false;}};
+const momDailyMessages=[
+ "I’m so proud of you, my little star!",
+ "Your voice is special. Let it shine!",
+ "Every little practice makes you stronger.",
+ "You are brave, creative, and wonderfully you!",
+ "I love hearing you try something new.",
+ "Mistakes help us learn. Keep going, sweetheart!",
+ "Your ideas matter, and your voice deserves to be heard.",
+ "Take a deep breath. You can do this!",
+ "You made progress today, and that is worth celebrating!",
+ "Keep shining, little voice. Mommy believes in you!"
+];
+function showDailyMomMessage(){
+ const day=Math.floor(Date.now()/86400000);
+ const index=day%momDailyMessages.length;
+ const el=byId("momDailyMessage");
+ if(el)el.textContent=momDailyMessages[index];
+}
+window.nextMomMessage=()=>{
+ const el=byId("momDailyMessage");
+ if(!el)return;
+ const current=momDailyMessages.indexOf(el.textContent);
+ el.textContent=momDailyMessages[(current+1+momDailyMessages.length)%momDailyMessages.length];
+};
+showDailyMomMessage();
+window.sendMomMessage=async()=>{if(!auth.currentUser){byId("momStatus").textContent="Please sign in first.";return;}const msg=byId("momMessage").value.trim();if(!msg){byId("momStatus").textContent="Please write a message.";return;}if(hasBadWords(msg)){byId("momStatus").textContent="Please use kind words. 💗";return;}try{await set(push(ref(db,"parentMessages")),{uid:auth.currentUser.uid,text:msg,createdAt:new Date().toISOString()});byId("momStatus").textContent="Message sent!";byId("momMessage").value="";}catch(e){byId("momStatus").textContent="Could not send message.";}}
+function hasBadWords(text){const blocked=["badword1","badword2"];return blocked.some(w=>text.toLowerCase().includes(w));}
+let recorder,parts=[];
+window.startRecording=async()=>{try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});parts=[];recorder=new MediaRecorder(stream);recorder.ondataavailable=e=>parts.push(e.data);recorder.onstop=()=>{const blob=new Blob(parts,{type:"audio/webm"});byId("playback").src=URL.createObjectURL(blob);stream.getTracks().forEach(t=>t.stop());byId("recordStatus").textContent="Recording ready to play.";};recorder.start();byId("recordStatus").textContent="Recording...";}catch(e){byId("recordStatus").textContent="Microphone permission is required.";}}
+window.stopRecording=()=>{if(recorder&&recorder.state==="recording")recorder.stop();};
+window.chooseLine=line=>{byId("practiceLine").textContent=line;show("studio");};
+window.togglePassword=()=>{const p=byId("password");p.type=p.type==="password"?"text":"password";};
+window.updateCertificate=()=>{byId("certificateDisplay").textContent=byId("certificateName").value.trim()||"Little Star";};
+window.enterAcademy=async()=>{const screen=byId("welcomeScreen");if(screen)screen.classList.add("hidden");const music=byId("academyMusic");if(music){music.volume=.32;try{await music.play();byId("musicToggle").textContent="Pause Music";}catch(e){byId("musicToggle").textContent="Play Music";}}window.greetDobby("welcome");};
+window.toggleAcademyMusic=async()=>{const music=byId("academyMusic"),btn=byId("musicToggle");if(!music)return;if(music.paused){try{await music.play();btn.textContent="Pause Music";}catch(e){btn.textContent="Play Music";}}else{music.pause();btn.textContent="Play Music";}};
+window.toggleMusicVolume=()=>{const music=byId("academyMusic"),btn=byId("musicVolume");if(!music)return;music.muted=!music.muted;btn.textContent=music.muted?"🔇":"🔊";};
+window.freeHello=()=>{const msg="Hello! My name is a little star, and my voice can shine!";byId("freeCornerStatus").textContent=msg;if("speechSynthesis" in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(msg);u.lang="en-US";u.rate=.88;u.pitch=1.2;speechSynthesis.speak(u);}};
+const freeStars=["You are learning something new every day. Keep shining! ⭐","Your voice matters. Be proud of every little try! 🎤","You are creative, brave and wonderfully you! 💗","Every big dream begins with one small step. 🌈"];
+window.newFreeStar=()=>{const msg=freeStars[Math.floor(Math.random()*freeStars.length)];byId("freeStarMessage").textContent=msg;byId("freeCornerStatus").textContent=msg;};
+window.freeCelebrate=()=>{byId("freeCornerStatus").textContent="Hooray! You tried, and that is wonderful! 🎉👏";window.dobbyCelebrate();};
+window.freeKindWords=()=>{byId("freeCornerStatus").textContent="You are kind, curious and full of wonderful ideas. Keep being you! 💌";};
+window.greetDobby=(kind="welcome")=>{
+ const name=(byId("dobbyChildName")?.value||"").trim().replace(/[<>]/g,"").slice(0,35);
+ const who=name||"little star";
+ let msg;
+ if(kind==="morning") msg=`Good morning, ${who}! Dobby is so happy to see you. Are you ready to learn, play and let your beautiful voice shine today?`;
+ else if(kind==="evening") msg=`Good evening, ${who}! You did a lovely job today. Dobby is proud of you. Keep smiling and keep shining!`;
+ else msg=`Hello, ${who}! I'm Dobby, your teddy bear friend at Voice Glow Kids. Welcome! Let's have fun, practice our voices and shine together!`;
+ const box=byId("dobbyMessage");
+ if(box) box.textContent=msg;
+ if("speechSynthesis" in window){
+  speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance(msg);
+  utterance.lang="en-US";
+  utterance.rate=0.88;
+  utterance.pitch=1.22;
+  const voices=speechSynthesis.getVoices();
+  const preferred=voices.find(v=>/female|child|google.*english/i.test(v.name)&&/^en/i.test(v.lang))
+    ||voices.find(v=>/^en/i.test(v.lang));
+  if(preferred) utterance.voice=preferred;
+  speechSynthesis.speak(utterance);
+ } else if(box) box.textContent=msg+" (Audio playback is not supported on this browser.)";
+};
+// Dobby speaks a cheerful reward in his own on-page character voice.
+window.dobbyCelebrate=function(){
+ const bear=document.querySelector('#dobbyWelcomeCard .emoji');
+ if(bear){bear.classList.remove('dobby-bounce');void bear.offsetWidth;bear.classList.add('dobby-bounce');}
+ let toast=document.getElementById('dobbyToast');
+ if(!toast){toast=document.createElement('div');toast.id='dobbyToast';toast.className='dobby-toast';document.body.appendChild(toast);}
+ toast.textContent='🧸 Hooray! You did it! I’m so proud of you! ⭐';
+ toast.classList.add('show');
+ const layer=document.createElement('div');layer.className='dobby-celebration';
+ const bits=['🎉','⭐','💗','✨','🌟','🎊','🕊️','🐦','💕'];
+ for(let i=0;i<34;i++){const el=document.createElement('span');el.className='confetti';el.textContent=bits[i%bits.length];el.style.left=(Math.random()*100)+'%';el.style.animationDelay=(Math.random()*.55)+'s';layer.appendChild(el);}
+ document.body.appendChild(layer);
+ setTimeout(()=>{layer.remove();toast.classList.remove('show');},2400);
+ if('speechSynthesis' in window){
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance('Hooray! You did it! I am so proud of you! Keep shining, little star!');
+  u.lang='en-US';u.rate=.86;u.pitch=1.28;
+  const vs=speechSynthesis.getVoices();const v=vs.find(x=>/female|child|google.*english/i.test(x.name)&&/^en/i.test(x.lang))||vs.find(x=>/^en/i.test(x.lang));
+  if(v)u.voice=v;speechSynthesis.speak(u);
+ }
+};
+// Celebrate every completed lesson step.
+document.querySelectorAll('.reporter-card input[type="checkbox"]').forEach(box=>{
+ box.addEventListener('change',()=>{if(box.checked)window.dobbyCelebrate();});
+});
+// Dobby greets the academy on opening; tap the button to hear the greeting.
+setTimeout(()=>{const h=new Date().getHours();byId("dobbyMessage").textContent=h<12?"Good morning, little stars! ☀️":h>=18?"Good night, little stars! Sweet dreams! 🌙":"Hello, little stars! Let's shine! ✨";},200);
+const floaties=document.createElement("div");floaties.className="floaties";floaties.setAttribute("aria-hidden","true");["💗","✨","⭐","💕","🌸","💖"].forEach((e,i)=>{const sp=document.createElement("span");sp.textContent=e;sp.style.left=(8+i*16)+"%";sp.style.animationDuration=(11+i%3*3)+"s";sp.style.animationDelay=(-i*2)+"s";floaties.append(sp);});document.body.prepend(floaties);
+
+window.adminSignIn=async()=>{
+ const status=byId("adminStatus");
+ try{
+  const credential=await signInWithEmailAndPassword(auth,byId("adminEmail").value.trim(),byId("adminPassword").value);
+  if(ADMIN_UID==="PASTE_ADMIN_UID_HERE"||credential.user.uid!==ADMIN_UID){
+   await signOut(auth);
+   status.textContent="This account is not authorized as the administrator.";
+   return;
+  }
+  status.textContent="Admin access granted.";
+  byId("adminLoginPanel").classList.add("hidden");
+  byId("adminDashboard").classList.remove("hidden");
+  await loadAdminData();
+ }catch(e){status.textContent="Admin sign-in failed: "+e.message;}
+};
+window.adminSignOut=async()=>{
+ await signOut(auth);
+ byId("adminDashboard").classList.add("hidden");
+ byId("adminLoginPanel").classList.remove("hidden");
+ byId("adminPassword").value="";
+ byId("adminStatus").textContent="Signed out.";
+};
+window.loadAdminData=async()=>{
+ const regs=byId("adminRegistrations"),msgs=byId("adminMessages"),journals=byId("adminJournals");
+ regs.textContent="Loading registrations...";
+ msgs.textContent="Loading messages...";if(journals)journals.textContent="Loading journals...";
+ try{
+  if(!auth.currentUser||ADMIN_UID==="PASTE_ADMIN_UID_HERE"||auth.currentUser.uid!==ADMIN_UID){
+   throw new Error("Please sign in with the authorized admin account.");
+  }
+  const [regSnap,msgSnap,journalSnap]=await Promise.all([
+   get(ref(db,"registrationRequests")),
+   get(ref(db,"parentMessages")),
+   get(ref(db,"childJournals"))
+  ]);
+  regs.innerHTML="";
+  if(regSnap.exists()){
+   Object.entries(regSnap.val()).forEach(([key,item])=>{
+    const card=document.createElement("article");
+    card.className="card";
+    const heading=document.createElement("h4");
+    heading.textContent=(item.childName||"Child")+(item.parentName?" — Parent: "+item.parentName:"");
+    const details=document.createElement("p");
+    details.textContent="Age: "+(item.childAge||"—")+" | Phone: "+(item.phone||"—")+" | Email: "+(item.email||"—")+" | Course: "+(item.training||"—")+" | Status: "+(item.status||"Pending");
+    const notes=document.createElement("p");notes.textContent="Notes: "+(item.notes||"—");
+    card.append(heading,details,notes);card.dataset.regKey=key;
+    const dates=document.createElement("div");dates.className="cards";dates.innerHTML=`<label>Course start (date & time) <input type="datetime-local" data-start value="${item.courseStartAt||item.courseStart||""}"></label><label>Course end (date & time) <input type="datetime-local" data-end value="${item.courseEndAt||item.courseEnd||""}"></label>`;card.append(dates);
+    const dateStatus=document.createElement("p");dateStatus.className="feed-meta";dateStatus.textContent=item.courseStart&&item.courseEnd?`Saved course dates: ${item.courseStart} → ${item.courseEnd}`:"Course dates have not been saved yet.";card.append(dateStatus);
+    const saveDates=document.createElement("button");saveDates.className="secondary";saveDates.textContent="💾 Save Course Dates";saveDates.addEventListener("click",()=>saveRegistrationDates(key,dates,dateStatus));card.append(saveDates);
+    const editReg=document.createElement("button");editReg.className="secondary";editReg.textContent="✏️ Edit Registration";editReg.addEventListener("click",()=>editRegistration(key,item));card.append(editReg);
+    const deleteReg=document.createElement("button");deleteReg.className="secondary";deleteReg.textContent="🗑 Delete Registration";deleteReg.addEventListener("click",()=>deleteRegistration(key));card.append(deleteReg);
+    const access=document.createElement("button");access.textContent=item.status==="approved"?"🔐 Regenerate Child Code":"Approve + Generate Child Code";access.addEventListener("click",()=>assignChildAccess(key,item.uid,item.childName,item.email));card.append(access);
+    const result=document.createElement("p");result.dataset.accessResult="";result.className="lock-note";card.append(result);
+    if(item.status==="approved"){const mail=document.createElement("button");mail.className="gold";mail.textContent="📧 Send Course Dates to Parent";mail.addEventListener("click",async()=>{const start=dates.querySelector("[data-start]").value,end=dates.querySelector("[data-end]").value;const ok=await sendCourseScheduleEmail(item.email,item.childName,start,end);if(ok)alert("Schedule email sent to the parent.");});card.append(mail);}
+    regs.append(card);
+   });
+  }else{regs.textContent="No registration requests yet.";}
+  if(journals){journals.innerHTML="";if(journalSnap.exists()){Object.entries(journalSnap.val()).forEach(([parentUid,children])=>Object.entries(children||{}).forEach(([key,j])=>{const card=document.createElement("article");card.className="card";const h=document.createElement("h4");h.textContent="📝 "+(j.childName||"Child");const p=document.createElement("p");p.textContent="Feeling: "+(j.mood||"—")+" | "+(j.note||"No reflection");const d=document.createElement("small");d.textContent="Updated: "+new Date(j.updatedAt||j.date||Date.now()).toLocaleString();card.append(h,p,d);journals.append(card);}));}else{journals.textContent="No journals saved yet.";}}
+  msgs.innerHTML="";
+  if(msgSnap.exists()){
+   Object.entries(msgSnap.val()).forEach(([messageKey,item])=>{
+    item.key=messageKey;const card=document.createElement("article");card.className="card";
+    const p=document.createElement("p");p.textContent=item.text||"(Empty message)";
+    const date=document.createElement("small");date.textContent=item.createdAt||"";
+    card.append(p,date);const editMsg=document.createElement("button");editMsg.className="secondary";editMsg.textContent="✏️ Edit";editMsg.addEventListener("click",()=>editParentMessage(item));const deleteMsg=document.createElement("button");deleteMsg.className="secondary";deleteMsg.textContent="🗑 Delete";deleteMsg.addEventListener("click",()=>deleteParentMessage(item));card.append(editMsg,deleteMsg);msgs.append(card);
+   });
+  }else{msgs.textContent="No parent messages yet.";}
+ }catch(e){regs.textContent="Could not load data: "+e.message;msgs.textContent="Check your Firebase Realtime Database rules.";}
+};
+
+window.saveRegistrationDates=async(key,dates,status)=>{try{if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID||ADMIN_UID==="PASTE_ADMIN_UID_HERE")throw new Error("Admin access is not configured.");const start=dates.querySelector("[data-start]").value,end=dates.querySelector("[data-end]").value;if(!start||!end||new Date(end)<=new Date(start))throw new Error("Choose a valid start date and end date/time.");await update(ref(db,"registrationRequests/"+key),{courseStart:start.slice(0,10),courseEnd:end.slice(0,10),courseStartAt:start,courseEndAt:end,datesUpdatedAt:new Date().toISOString()});const regSnap=await get(ref(db,"registrationRequests/"+key));const reg=regSnap.val();if(reg?.uid){const childSnap=await get(ref(db,`childAccess/${reg.uid}/${key}`));if(childSnap.exists())await update(ref(db,`childAccess/${reg.uid}/${key}`),{courseStart:start.slice(0,10),courseEnd:end.slice(0,10),courseStartAt:start,courseEndAt:end});}status.textContent=`Saved course dates: ${start.replace("T"," ")} → ${end.replace("T"," ")}`;
+if(reg?.email){
+ const sent=await window.sendCourseScheduleEmail(reg.email,reg.childName||"your child",start,end);
+ if(sent)status.textContent+= " • Schedule email sent to "+reg.email;
+ else status.textContent+= " • Dates saved, but email needs EmailJS setup.";
+}
+alert("Course dates saved successfully.");}catch(e){alert("Could not save dates: "+e.message);}};
+window.editRegistration=async(key,item)=>{if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID||ADMIN_UID==="PASTE_ADMIN_UID_HERE")return alert("Admin access is not configured.");const parentName=prompt("Parent name:",item.parentName||"");if(parentName===null)return;const childName=prompt("Child name:",item.childName||"");if(childName===null)return;const phone=prompt("Parent phone:",item.phone||"");if(phone===null)return;const email=prompt("Parent email:",item.email||"");if(email===null)return;const age=prompt("Child age:",item.childAge||"");if(age===null)return;try{await update(ref(db,"registrationRequests/"+key),{parentName:parentName.trim(),childName:childName.trim(),phone:phone.trim(),email:email.trim(),childAge:age.trim(),updatedAt:new Date().toISOString()});if(item.uid){const childSnap=await get(ref(db,`childAccess/${item.uid}/${key}`));if(childSnap.exists())await update(ref(db,`childAccess/${item.uid}/${key}`),{childName:childName.trim(),parentEmail:email.trim()});}alert("Registration updated. Refreshing the list.");await loadAdminData();}catch(e){alert("Could not edit registration: "+e.message);}};
+window.deleteRegistration=async(key)=>{if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID||ADMIN_UID==="PASTE_ADMIN_UID_HERE")return alert("Admin access is not configured.");if(!confirm("Permanently delete this registration request?"))return;try{const regSnap=await get(ref(db,"registrationRequests/"+key));const reg=regSnap.val();if(reg?.uid)await remove(ref(db,`childAccess/${reg.uid}/${key}`));await remove(ref(db,"registrationRequests/"+key));await loadAdminData();}catch(e){alert("Could not delete registration: "+e.message);}};
+window.editParentMessage=async(item)=>{if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID||ADMIN_UID==="PASTE_ADMIN_UID_HERE")return alert("Admin access is not configured.");const next=prompt("Edit parent message:",item.text||"");if(next===null)return;try{await update(ref(db,"parentMessages/"+item.key),{text:next.trim(),editedAt:new Date().toISOString()});await loadAdminData();}catch(e){alert("Could not edit message: "+e.message);}};
+window.deleteParentMessage=async(item)=>{if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID||ADMIN_UID==="PASTE_ADMIN_UID_HERE")return alert("Admin access is not configured.");if(!confirm("Delete this parent message?"))return;try{await remove(ref(db,"parentMessages/"+item.key));await loadAdminData();}catch(e){alert("Could not delete message: "+e.message);}};
+async function sha256Hex(value){const bytes=new TextEncoder().encode(value);const digest=await crypto.subtle.digest("SHA-256",bytes);return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,"0")).join("");}
+async function makeUniqueSixDigitCode(){
+ const allSnap=await get(ref(db,"childAccess"));
+ const records=[];
+ if(allSnap.exists()) for(const [parentUid,children] of Object.entries(allSnap.val())) for(const [registrationKey,child] of Object.entries(children||{})) if(child?.codeVersion===2&&child?.codeHash) records.push({parentUid,registrationKey,codeHash:child.codeHash});
+ for(let attempt=0;attempt<100;attempt++){
+  const bytes=new Uint32Array(1);crypto.getRandomValues(bytes);
+  const code=String(100000+(bytes[0]%900000));
+  let duplicate=false;
+  for(const record of records){
+   const candidateHash=await sha256Hex(`${record.parentUid}:${record.registrationKey}:${code}`);
+   if(candidateHash===record.codeHash){duplicate=true;break;}
+  }
+  if(!duplicate)return code;
+ }
+ throw new Error("Could not create a unique child code. Please try again.");
+}
+window.assignChildAccess=async(key,uid,childName,parentEmail)=>{try{if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID||ADMIN_UID==="PASTE_ADMIN_UID_HERE")throw new Error("Admin access is not configured.");if(!uid||!key)throw new Error("The registration is missing its parent account link.");const card=document.querySelector(`[data-reg-key="${key}"]`);const start=card?.querySelector("[data-start]")?.value||"";const end=card?.querySelector("[data-end]")?.value||"";if(!start||!end||new Date(end)<=new Date(start))throw new Error("Choose valid course start and end date/times first.");const password=await makeUniqueSixDigitCode();const codeHash=await sha256Hex(`${uid}:${key}:${password}`);await update(ref(db,"registrationRequests/"+key),{status:"approved",approvedAt:new Date().toISOString(),courseStart:start.slice(0,10),courseEnd:end.slice(0,10),courseStartAt:start,courseEndAt:end});await set(ref(db,`childAccess/${uid}/${key}`),{uid,registrationKey:key,childName,parentEmail,approved:true,codeVersion:2,codeHash,courseStart:start.slice(0,10),courseEnd:end.slice(0,10),courseStartAt:start,courseEndAt:end,createdAt:new Date().toISOString()});const output=card?.querySelector("[data-access-result]");if(output)output.textContent=`🔐 CHILD ACCESS CODE — 6 DIGITS (copy and send privately): ${password}\n📅 Course dates: ${start.replace("T"," ")} → ${end.replace("T"," ")}`;const btn=card?.querySelector("button");if(btn)btn.textContent="✅ Approved — 6-Digit Code Created";}catch(e){alert("Could not assign child access: "+e.message);}};
+window.unlockChildCurriculum=async()=>{const status=byId("curriculumStatus");const name=byId("curriculumChildName").value.trim().toLowerCase();const password=byId("curriculumChildPassword").value;if(!auth.currentUser||!auth.currentUser.emailVerified){status.textContent="Please sign in with the verified parent account first.";return;}if(!name||!password){status.textContent="Enter your child's name and academy access code.";return;}try{const snap=await get(ref(db,"childAccess/"+auth.currentUser.uid));if(!snap.exists())throw new Error("No approved child access was found for this parent account yet.");const normalizedCode=password.trim();if(!/^\d{6}$/.test(normalizedCode))throw new Error("Enter the 6-digit code issued by the academy.");const entries=Object.entries(snap.val());let match=null;for(const [registrationKey,child] of entries){if(String(child.childName||"").trim().toLowerCase()!==name||child.approved!==true||child.codeVersion!==2)continue;const submittedHash=await sha256Hex(`${auth.currentUser.uid}:${registrationKey}:${normalizedCode}`);if(submittedHash===child.codeHash){match=child;break;}}if(!match)throw new Error("The child name or access code is incorrect, or access is not approved.");const now=new Date();const startAt=match.courseStartAt?new Date(match.courseStartAt):new Date((match.courseStart||"2000-01-01")+"T00:00");const endAt=match.courseEndAt?new Date(match.courseEndAt):new Date((match.courseEnd||"2999-12-31")+"T23:59");if(now<startAt||now>endAt)throw new Error(`Curriculum access is available from ${startAt.toLocaleString()} to ${endAt.toLocaleString()}.`);window.activeChildAccess=match;const contentSnap=await get(ref(db,"curriculumContent"));const content=contentSnap.exists()?contentSnap.val():{lessons:[]};byId("curriculumWelcome").textContent=`Welcome, ${match.childName}! Your course runs from ${match.courseStart||"the scheduled start"} to ${match.courseEnd||"the scheduled end"}. 🌸`;const host=byId("curriculumLessons");host.innerHTML="";const lessons=Array.isArray(content.lessons)?content.lessons:[];lessons.forEach((lesson,i)=>{const card=document.createElement("article");card.className="curriculum-lesson";const h=document.createElement("h3");h.textContent=lesson.title||`Lesson ${i+1}`;const body=document.createElement("p");body.textContent=lesson.content||"";card.append(h,body);host.append(card);});const lessonButton=document.createElement("button");lessonButton.type="button";lessonButton.textContent="🎙 Open Young School Reporter Lesson";lessonButton.addEventListener("click",()=>window.show("youngSchoolReporter"));host.append(lessonButton);byId("curriculumContent").classList.remove("hidden");document.querySelectorAll(".child-only").forEach(el=>el.classList.remove("hidden"));status.textContent=lessons.length?"Curriculum unlocked. Have fun, Little Star! ✨":"Your private access is ready. Start with the Young School Reporter lesson below! ✨";}catch(e){byId("curriculumContent").classList.add("hidden");status.textContent=e.message;}};
+window.publishCurriculum=async()=>{const status=byId("curriculumAdminStatus");try{if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID||ADMIN_UID==="PASTE_ADMIN_UID_HERE")throw new Error("Admin access is not configured.");const raw=byId("adminCurriculumText").value.trim();if(!raw)throw new Error("Add lesson content first.");const lessons=raw.split(/\n\s*\n/).map((block,i)=>{const lines=block.split("\n");return {title:lines[0].replace(/^#+\s*/,"").trim()||`Lesson ${i+1}`,content:lines.slice(1).join("\n").trim()||lines[0].trim()};});await set(ref(db,"curriculumContent"),{lessons,updatedAt:new Date().toISOString(),updatedBy:auth.currentUser.uid});status.textContent="Curriculum published. Only approved child accounts can unlock it in the website.";}catch(e){status.textContent="Could not publish: "+e.message;}};
+window.persistReporterJournal=async(payload)=>{if(!auth.currentUser||!auth.currentUser.emailVerified)throw new Error("Please sign in with the verified parent account before saving the journal.");const child=window.activeChildAccess;if(!child?.registrationKey)throw new Error("Unlock your child's curriculum first.");const record={...payload,uid:auth.currentUser.uid,registrationKey:child.registrationKey,childName:child.childName||"Child",updatedAt:new Date().toISOString()};await set(ref(db,`childJournals/${auth.currentUser.uid}/${child.registrationKey}`),record);return record;};
+window.loadParentDashboard=async()=>{const host=byId("parentDashboardContent");host.textContent="Loading your child's information...";try{if(!auth.currentUser||!auth.currentUser.emailVerified)throw new Error("Please sign in with your verified parent account first.");const [accessSnap,journalSnap]=await Promise.all([get(ref(db,"childAccess/"+auth.currentUser.uid)),get(ref(db,"childJournals/"+auth.currentUser.uid))]);host.innerHTML="";if(!accessSnap.exists()){host.textContent="No approved child enrollment is linked to this account yet.";return;}for(const [key,child] of Object.entries(accessSnap.val())){const card=document.createElement("article");card.className="card";const h=document.createElement("h3");h.textContent="🌟 "+(child.childName||"Your child");const dates=document.createElement("p");dates.textContent="Course: "+(child.courseStartAt||child.courseStart||"Not set")+" → "+(child.courseEndAt||child.courseEnd||"Not set");card.append(h,dates);const journal=journalSnap.exists()?journalSnap.val()[key]:null;const j=document.createElement("div");if(journal){const title=document.createElement("h4");title.textContent="📝 Latest Journal";const mood=document.createElement("p");mood.textContent="Feeling: "+(journal.mood||"Not selected");const note=document.createElement("p");note.textContent=journal.note||"No reflection written yet.";const when=document.createElement("small");when.textContent="Updated: "+new Date(journal.updatedAt||journal.date||Date.now()).toLocaleString();j.append(title,mood,note,when);}else{j.textContent="No journal entry has been saved yet.";}card.append(j);host.append(card);}}catch(e){host.textContent=e.message;}};
+window.sendCourseScheduleEmail=async(parentEmail,childName,start,end)=>{try{if(!window.emailjs||VGK_EMAILJS.publicKey.startsWith("PASTE_")||VGK_EMAILJS.serviceId.startsWith("PASTE_")||VGK_EMAILJS.templateId.startsWith("PASTE_"))throw new Error("EmailJS is not configured yet. Add your public key, service ID and template ID in the setup section.");emailjs.init({publicKey:VGK_EMAILJS.publicKey});await emailjs.send(VGK_EMAILJS.serviceId,VGK_EMAILJS.templateId,{to_email:parentEmail,parent_email:parentEmail,child_name:childName,course_start:start,course_end:end,subject:`${childName}'s Voice Glow Kids Course Schedule`,message:`Your child's course starts on ${start} and ends on ${end}. Sessions: Sunday and Tuesday, 7:00–8:00 PM.`});return true;}catch(e){alert("Schedule email was not sent: "+e.message);return false;}};
+window.approveRegistration=async(key)=>{byId("adminStatus").textContent="Use Approve + Generate Child Code so each child receives a unique password and course dates.";};
+
+byId("certificateDate").textContent=new Date().toLocaleDateString("en-US");
+
+function updateClock(){const now=new Date();byId("clock").textContent=now.toLocaleDateString("en-GB")+" • "+now.toLocaleTimeString("en-GB");}updateClock();setInterval(updateClock,1000);
+</script>
+
+<script id="reporterScripts">
+(function(){
+ const intro="Good morning, everyone! Welcome to our school radio. Today, we are delighted to interview our school principal. Let's get started!";
+ const questions=[
+ "What inspired you to become a school principal?",
+ "What is your favorite thing about our school?",
+ "What makes a good student?",
+ "How do you encourage students to achieve their dreams?",
+ "What new activities would you like to introduce at school?",
+ "What advice would you give to students who feel shy?",
+ "What is your happiest memory as a principal?",
+ "What message would you like to share with all students?"
+ ];
+ window.reporterSpeak=function(kind){
+  if(!("speechSynthesis" in window))return;
+  const text=kind==="questions"?questions.join(" ... "):intro;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=.88;u.pitch=1.12;
+  speechSynthesis.speak(u);
+ };
+ window.saveReporterJournal=function(){
+  const mood=document.getElementById("reporterMood")?.value||"";
+  const note=document.getElementById("reporterReflection")?.value||"";
+  try{const payload={mood,note,date:new Date().toISOString()};localStorage.setItem("vgk-reporter-journal",JSON.stringify(payload));
+   if(typeof window.persistReporterJournal==="function"){window.persistReporterJournal(payload).then(()=>{document.getElementById("reporterJournalStatus").textContent="Saved to your private course journal. Great work, reporter! 💗";}).catch(e=>{document.getElementById("reporterJournalStatus").textContent="Saved on this device only. Cloud sync: "+e.message;});}else{document.getElementById("reporterJournalStatus").textContent="Saved on this device only.";}
+  }catch(e){document.getElementById("reporterJournalStatus").textContent="Unable to save journal.";}
+ };
+ const start=document.getElementById("reporterStart"),stop=document.getElementById("reporterStop");
+ const audio=document.getElementById("reporterPlayback"),status=document.getElementById("reporterStatus");
+ let recorder=null,chunks=[];
+ if(start&&stop&&navigator.mediaDevices?.getUserMedia&&window.MediaRecorder){
+  start.addEventListener("click",async()=>{
+   try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    chunks=[];recorder=new MediaRecorder(stream);
+    recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+    recorder.onstop=()=>{
+     const blob=new Blob(chunks,{type:recorder.mimeType||"audio/webm"});
+     audio.src=URL.createObjectURL(blob);audio.classList.remove("hidden");
+     stream.getTracks().forEach(t=>t.stop());
+     status.textContent="Recording ready! Listen to your practice.";
+    };
+    recorder.start();start.disabled=true;stop.disabled=false;status.textContent="Recording… speak clearly and smile!";
+   }catch(e){status.textContent="Microphone access was not granted. Please allow microphone access and try again.";}
+  });
+  stop.addEventListener("click",()=>{if(recorder?.state==="recording"){recorder.stop();start.disabled=false;stop.disabled=true;}});
+ }else if(status){status.textContent="Recording needs a browser with microphone and MediaRecorder support, usually on HTTPS.";}
+})();
+</script>
+
+</body>
+</html>
